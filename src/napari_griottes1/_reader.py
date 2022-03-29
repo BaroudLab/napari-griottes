@@ -6,6 +6,7 @@ implement multiple readers or even other plugin contributions. see:
 https://napari.org/plugins/stable/guides.html#readers
 """
 import numpy as np
+from tifffile import imread
 
 
 def napari_get_reader(path):
@@ -29,11 +30,26 @@ def napari_get_reader(path):
         path = path[0]
 
     # if we know we cannot read the file, we immediately return None.
-    if not path.endswith(".npy"):
-        return None
+    if path.endswith('.tif') or path.endswith('.tiff'):
+        return read_tif
 
     # otherwise we return the *function* that can read ``path``.
     return reader_function
+
+
+def read_tif(path="", **kwargs):
+    print(f'Opening {path}')
+    data = imread(path)
+    print(f'input shape: {data.shape}')
+    if data.shape[-1] < 10:
+        dims = list(range(data.ndim))
+        last_dim = dims.pop()
+        dims.insert(0,last_dim)
+        data = data.transpose(*dims)
+        print(f'transpose -> {data.shape}')
+    
+    return [(data, {"channel_axis": 0, **kwargs}, 'image')]
+
 
 
 def reader_function(path):
