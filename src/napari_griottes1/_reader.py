@@ -7,6 +7,7 @@ https://napari.org/plugins/stable/guides.html#readers
 """
 import numpy as np
 from tifffile import imread
+import pandas
 
 
 def napari_get_reader(path):
@@ -33,6 +34,9 @@ def napari_get_reader(path):
     if path.endswith('.tif') or path.endswith('.tiff'):
         return read_tif
 
+    if path.endswith('.csv'):
+        return read_csv
+
     # otherwise we return the *function* that can read ``path``.
     return reader_function
 
@@ -50,6 +54,18 @@ def read_tif(path="", **kwargs):
     
     return [(data, {"channel_axis": 0, **kwargs}, 'image')]
 
+def read_csv(path, **kwargs):
+    data = pandas.read_csv(path, index_col=None)
+    try:
+        return [(
+            data[["z","y","x"]].values, 
+            {"metadata":{"path":path}, **kwargs}, 
+            'points')]
+    except KeyError:
+        return [(
+            data[["y","x"]].values, 
+            {"metadata":{"path":path}, **kwargs}, 
+            'points')]
 
 
 def reader_function(path):
