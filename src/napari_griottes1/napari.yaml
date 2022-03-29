@@ -5,28 +5,38 @@ contributions:
     - id: napari-griottes1.get_reader
       python_name: napari_griottes1._reader:napari_get_reader
       title: Open data with Griottes
+
     - id: napari-griottes1.write_multiple
       python_name: napari_griottes1._writer:write_multiple
       title: Save multi-layer data with Griottes
+
     - id: napari-griottes1.write_single_image
       python_name: napari_griottes1._writer:write_single_image
       title: Save image data with Griottes
+
     - id: napari-griottes1.make_sample_data
       python_name: napari_griottes1._sample_data:make_sample_data
       title: Load sample data from Griottes 
-    - id: napari-griottes1.make_qwidget
-      python_name: napari_griottes1._widget:ExampleQWidget
-      title: Make example QWidget
-    - id: napari-griottes1.make_magic_widget
-      python_name: napari_griottes1._widget:example_magic_widget
-      title: Make example magic widget
-    - id: napari-griottes1.make_func_widget
-      python_name: napari_griottes1._widget:example_function_widget
-      title: Make example function widget 
+
+    - id: napari-griottes1.make_zebrafish_data
+      python_name: napari_griottes1._sample_data:make_zebrafish_data
+      title: Load zebrafish sample data from Griottes 
+
+    - id: napari-griottes1.make_cell_properties
+      python_name: napari_griottes1._sample_data:make_cell_properties
+      title: Load zebrafish cell properties Griottes 
+
+    - id: napari-griottes1.make_contact_graph
+      python_name: napari_griottes1._widget:make_contact_graph
+      title: Make contact graph 
+
+
   readers:
     - command: napari-griottes1.get_reader
       accepts_directories: false
-      filename_patterns: ['*.npy'] 
+      filename_patterns: ['*.npy', '*.tif', '*.tiff', '*.csv'] 
+
+
   writers:
     - command: napari-griottes1.write_multiple
       layer_types: ['image*','labels*']
@@ -34,15 +44,19 @@ contributions:
     - command: napari-griottes1.write_single_image
       layer_types: ['image']
       filename_extensions: ['.npy'] 
+
+
   sample_data:
-    - command: napari-griottes1.make_sample_data
-      display_name: Griottes
-      key: unique_id.1 
+    - command: napari-griottes1.make_cell_properties
+      display_name: Cell properties table 3D
+      key: csv
+    - command: napari-griottes1.make_zebrafish_data
+      display_name: Zebrafish 2D with labels
+      key: zebra
   widgets:
-    - command: napari-griottes1.make_qwidget
-      display_name: Example QWidget
-    - command: napari-griottes1.make_magic_widget
-      display_name: Example Magic Widget
-    - command: napari-griottes1.make_func_widget
-      autogenerate: true
-      display_name: Example Function Widget 
+    # - command: napari-griottes1.make_qwidget
+    #   display_name: Example QWidget
+    # - command: napari-griottes1.make_magic_widget
+    #   display_name: Example Magic Widget
+    - command: napari-griottes1.make_contact_graph
+      display_name: Contact graph 
