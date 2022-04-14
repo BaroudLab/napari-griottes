@@ -27,24 +27,8 @@ def make_zebrafish_data():
     )
 
 def make_cell_properties():
-    zyx, prop, layer_type = _load_griottes_sample_data(*GRIOTTES_DATA[1])[0]
-    print(prop)
-    data = pandas.read_csv(prop["metadata"]["path"], index_col=None)
-    return [
-        (
-            zyx,
-            {**dict(
-                ndim=3,
-                size=5,
-                properties=data,
-                face_color="cell_type",
-                face_color_cycle=['#ff00ff','#ffff00','#00ffff'],
-                opacity=.5,
-                )
-            },
-            'points'
-        )
-    ]
+
+    return _load_griottes_sample_data(*GRIOTTES_DATA[1])
 
     
 
