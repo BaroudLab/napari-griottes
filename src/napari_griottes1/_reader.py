@@ -5,6 +5,7 @@ It implements the Reader specification, but your plugin may choose to
 implement multiple readers or even other plugin contributions. see:
 https://napari.org/plugins/stable/guides.html#readers
 """
+from importlib_metadata import metadata
 import numpy as np
 from tifffile import imread
 import pandas
@@ -57,15 +58,31 @@ def read_tif(path="", **kwargs):
 def read_csv(path, **kwargs):
     data = pandas.read_csv(path, index_col=None)
     try:
-        return [(
-            data[["z","y","x"]].values, 
-            {"metadata":{"path":path}, **kwargs}, 
-            'points')]
+        return colorized_points(data, metadata={"path":path})
     except KeyError:
         return [(
             data[["y","x"]].values, 
             {"metadata":{"path":path}, **kwargs}, 
             'points')]
+
+
+def colorized_points(data, **kwargs):
+    return [
+        (
+            data[["z","y","x"]].values,
+            {**dict(
+                ndim=3,
+                size=5,
+                properties=data,
+                face_color="cell_type",
+                face_color_cycle=['#ff00ff','#ffff00','#00ffff'],
+                opacity=.5,
+                ),
+                **kwargs
+            },
+            'points'
+        )
+    ]
 
 
 def reader_function(path):
