@@ -6,37 +6,44 @@ see: https://napari.org/plugins/stable/guides.html#widgets
 
 Replace code below according to your needs.
 """
+from lib2to3.pytree import type_repr
+import numpy
 from qtpy.QtWidgets import QWidget, QHBoxLayout, QPushButton
 from magicgui import magic_factory
 import griottes
 import networkx as nx
-import numpy as np
 import napari
 import pandas as pd
+import numpy as np
+
 
 FUNCS = {
-    "Contact_graph": griottes.generate_contact_graph,
     "Geometric graph": griottes.generate_geometric_graph,
     "Delaunay": griottes.generate_delaunay_graph,
+    "Contact_graph": griottes.generate_contact_graph,
 }
+CNAME = "Connections"
+viewer = napari.current_viewer()
 
 @magic_factory(
-    auto_call=True,
+    auto_call=False,
     graph={"widget_type": "ComboBox", "choices": FUNCS.keys(),},
-    distance={"widget_type": "Slider", "min":10, "max":150, }
+    distance={"widget_type": "Slider", "min":10, "max":150, },
+    thickness={"widget_type": "Slider", "min":1, "max":5, }
 )
-def make_contact_graph(
+def make_graph(
     label_layer: "napari.layers.Labels",
     point_layer: "napari.layers.Points",
-    graph:"str" = list(FUNCS.keys())[0],
-    distance:"int" = 35) -> napari.types.LayerDataTuple :
+    graph:"str",
+    distance:"int" = 35,
+    thickness:"int" = 1) -> napari.types.LayerDataTuple :
 
     # print(f"you have selected {img_layer}, {img_layer.data.shape}")
     if point_layer is None:
         print('No points, generating')
-        centers = griottes.analyse.cell_property_extraction.get_nuclei_properties(label_layer.data, mask_channel = None)
+        raw_centers = griottes.analyse.cell_property_extraction.get_nuclei_properties(label_layer.data, mask_channel = None)
         try:
-            centers = centers.rename(columns={'centroid-0' : 'x', 'centroid-1' : 'y', 'centroid-2' : 'z'})
+            centers = raw_centers.rename(columns={'centroid-0' : 'z', 'centroid-1' : 'y', 'centroid-2' : 'x'})
             return [
                 (
                     centers[['z','y','x']], 
@@ -45,7 +52,8 @@ def make_contact_graph(
                 ),
             ]
         except KeyError:
-            centers = centers.rename(columns={'centroid-0' : 'x', 'centroid-1' : 'y', })
+            # print("centers 2D")
+            centers = raw_centers.rename(columns={'centroid-0' : 'y', 'centroid-1' : 'x', })
             return [
                 (
                     centers[['y','x']], 
@@ -54,36 +62,68 @@ def make_contact_graph(
                 ),
             ]
     data = pd.DataFrame(point_layer.properties)
-    try:
-        G = FUNCS[graph](
-            data,
-            descriptors=['label', 'cell_type', 'x', 'y', 'z','cell_properties'],
-            dCells=distance,
-        )
-    except (TypeError, AttributeError):
-        G = FUNCS[graph](
-            data,
-            analyze_fluo_channels=False,
-        )
-    except AssertionError:
-        G = FUNCS[graph](
-            data,
-            dCells=distance,
-        )
+    repr(data.head())
+    weights=thickness
+    if 'z' in data.columns:
+        try:
+            print('Graph in 3D')
+            weights = thickness * .2
+            G = FUNCS[graph](
+                data[['z', 'y', 'x', 'label']],
+                # descriptors=['label', 'cell_type', 'x', 'y', 'z','cell_properties'],
+                distance=distance,
+            )
 
-    pos = nx.get_node_attributes(G, 'pos')
-    zyx = {k:(v[0], v[2], v[1]) for k,v in pos.items()}
-    lines = [[zyx[i] for i in ids] for ids in list(G.edges)]
+            pos = nx.get_node_attributes(G, 'pos')
+            lines = np.array([[pos[i] for i in ids] for ids in list(G.edges)], dtype='int')
+            print(f'{len(lines)} lines for {len(pos)} positions computed, rendering...')
+            # print(lines)
+            try:
+                viewer.layers.remove(CNAME)
+            except ValueError:
+                pass
+            return [
+                (
+                    lines,
+                    {"shape_type":"line", "name": CNAME, },
+                    'shapes'
+                )
+            ]
+        except ValueError:
+            print('ValueError')
+    else:
+        try:
+            print('Graph in 2D,')
+            
+            G = FUNCS[graph](
+                data[['x','y','label']],
+                image_is_2D = True,
+                distance=distance,
+            )
+
+            pos = nx.get_node_attributes(G, 'pos')
+            # yx = {k:(v[1], v[0]) for k,v in pos.items()}
+            lines = [[pos[i] for i in ids] for ids in list(G.edges)]
+        except TypeError:
+            print('contact graph')
+            G = FUNCS[graph](
+                label_layer.data,
+            )
+            pos = nx.get_node_attributes(G, 'pos')
+            lines = [[pos[i] for i in ids] for ids in list(G.edges)]
+            try:
+                weights = [.2 * thickness * e[2]["weight"] for e in G.edges(data=True)]
+            except IndexError:
+                print("weights failed!", )
+        
 
     return [
-        (
-            np.array(lines),
-            {"shape_type":"line", "name":"Connections", "edge_color":"white"},
-            'shapes'
-        )
-    ]
-
-
+            (
+                lines,
+                {"shape_type":"line", "name":"Connections",  "edge_width": weights},
+                'shapes'
+            )
+        ]
 
 class ExampleQWidget(QWidget):
     # your QWidget.__init__ can optionally request the napari viewer instance
