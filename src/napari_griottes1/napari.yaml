@@ -14,10 +14,6 @@ contributions:
       python_name: napari_griottes1._writer:write_single_image
       title: Save image data with Griottes
 
-    - id: napari-griottes1.make_sample_data
-      python_name: napari_griottes1._sample_data:make_sample_data
-      title: Load sample data from Griottes 
-
     - id: napari-griottes1.make_zebrafish_data
       python_name: napari_griottes1._sample_data:make_zebrafish_data
       title: Load zebrafish sample data from Griottes 
@@ -26,9 +22,9 @@ contributions:
       python_name: napari_griottes1._sample_data:make_cell_properties
       title: Load zebrafish cell properties Griottes 
 
-    - id: napari-griottes1.make_contact_graph
-      python_name: napari_griottes1._widget:make_contact_graph
-      title: Make contact graph 
+    - id: napari-griottes1.make_graph
+      python_name: napari_griottes1._widget:make_graph
+      title: Make graph 
 
 
   readers:
@@ -58,5 +54,5 @@ contributions:
     #   display_name: Example QWidget
     # - command: napari-griottes1.make_magic_widget
     #   display_name: Example Magic Widget
-    - command: napari-griottes1.make_contact_graph
-      display_name: Contact graph 
+    - command: napari-griottes1.make_graph
+      display_name: Make graph 
