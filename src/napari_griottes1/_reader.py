@@ -5,10 +5,9 @@ It implements the Reader specification, but your plugin may choose to
 implement multiple readers or even other plugin contributions. see:
 https://napari.org/plugins/stable/guides.html#readers
 """
-from importlib_metadata import metadata
 import numpy as np
-from tifffile import imread
 import pandas
+from tifffile import imread
 
 
 def napari_get_reader(path):
@@ -32,60 +31,68 @@ def napari_get_reader(path):
         path = path[0]
 
     # if we know we cannot read the file, we immediately return None.
-    if path.endswith('.tif') or path.endswith('.tiff'):
+    if path.endswith(".tif") or path.endswith(".tiff"):
         return read_tif
 
-    if path.endswith('.csv'):
+    if path.endswith(".csv"):
         return read_csv
 
     # otherwise we return the *function* that can read ``path``.
-    return reader_function
+    if path.endswith(".npy"):
+        return reader_numpy
+
+    return None
 
 
 def read_tif(path="", **kwargs):
-    print(f'Opening {path}')
+    print(f"Opening {path}")
     data = imread(path)
-    print(f'input shape: {data.shape}')
+    print(f"input shape: {data.shape}")
     if data.shape[-1] < 10:
         dims = list(range(data.ndim))
         last_dim = dims.pop()
-        dims.insert(0,last_dim)
+        dims.insert(0, last_dim)
         data = data.transpose(*dims)
-        print(f'transpose -> {data.shape}')
-    
-    return [(data, {"channel_axis": 0, **kwargs}, 'image')]
+        print(f"transpose -> {data.shape}")
+
+    return [(data, {"channel_axis": 0, **kwargs}, "image")]
+
 
 def read_csv(path, **kwargs):
     data = pandas.read_csv(path, index_col=None)
     try:
-        return colorized_points(data, metadata={"path":path})
+        return colorized_points(data, metadata={"path": path})
     except KeyError:
-        return [(
-            data[["y","x"]].values, 
-            {"metadata":{"path":path}, **kwargs}, 
-            'points')]
+        return [
+            (
+                data[["y", "x"]].values,
+                {"metadata": {"path": path}, **kwargs},
+                "points",
+            )
+        ]
 
 
 def colorized_points(data, **kwargs):
     return [
         (
-            data[["z","y","x"]].values,
-            {**dict(
-                ndim=3,
-                size=5,
-                properties=data,
-                face_color="cell_type",
-                face_color_cycle=['#ff00ff','#ffff00','#00ffff'],
-                opacity=.5,
+            data[["z", "y", "x"]].values,
+            {
+                **dict(
+                    ndim=3,
+                    size=5,
+                    properties=data,
+                    face_color="cell_type",
+                    face_color_cycle=["#ff00ff", "#ffff00", "#00ffff"],
+                    opacity=0.5,
                 ),
-                **kwargs
+                **kwargs,
             },
-            'points'
+            "points",
         )
     ]
 
 
-def reader_function(path):
+def reader_numpy(path):
     """Take a path or list of paths and return a list of LayerData tuples.
 
     Readers are expected to return data as a list of tuples, where each tuple
@@ -103,7 +110,8 @@ def reader_function(path):
         A list of LayerData tuples where each tuple in the list contains
         (data, metadata, layer_type), where data is a numpy array, metadata is
         a dict of keyword arguments for the corresponding viewer.add_* method
-        in napari, and layer_type is a lower-case string naming the type of layer.
+        in napari, and layer_type is a lower-case string naming the type of
+        layer.
         Both "meta", and "layer_type" are optional. napari will default to
         layer_type=="image" if not provided
     """
