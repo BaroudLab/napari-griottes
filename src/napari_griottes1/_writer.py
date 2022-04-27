@@ -7,18 +7,17 @@ see: https://napari.org/plugins/stable/guides.html#writers
 Replace code below according to your needs.
 """
 from __future__ import annotations
-from typing import TYPE_CHECKING, List, Any, Sequence, Tuple, Union
+
+from typing import TYPE_CHECKING, Any, Sequence, Tuple, Union
+
+import networkx as nx
 
 if TYPE_CHECKING:
     DataType = Union[Any, Sequence[Any]]
     FullLayerData = Tuple[DataType, dict, str]
 
 
-def write_single_image(path: str, data: Any, meta: dict):
-    """Writes a single image layer"""
-    pass
-
-
-def write_multiple(path: str, data: List[FullLayerData]):
-    """Writes multiple layers of different types."""
-    pass
+def write_single_image(path: str, data: FullLayerData):
+    """Writes a single layer graph"""
+    shapes, meta, tpe = data
+    nx.write_gpickle(meta["graph"], path)
