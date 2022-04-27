@@ -161,6 +161,7 @@ def make_graph(
                 "shape_type": "line",
                 "name": "Connections",
                 "edge_width": weights,
+                "metadata": {"graph": G},
             },
             "shapes",
         )
