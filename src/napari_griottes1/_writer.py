@@ -17,7 +17,7 @@ if TYPE_CHECKING:
     FullLayerData = Tuple[DataType, dict, str]
 
 
-def write_single_image(path: str, data: FullLayerData):
+def save_graph(path: str, data: FullLayerData):
     """Writes a single layer graph"""
     shapes, meta, tpe = data
     nx.write_gpickle(meta["graph"], path)
