@@ -26,7 +26,8 @@ contributions:
   readers:
     - command: napari-griottes1.get_reader
       accepts_directories: false
-      filename_patterns: ['*.npy', '*.tif', '*.tiff', '*.csv']
+      filename_patterns: ['*.npy', '*.tif', '*.tiff', '*.csv','*.griottes']
+      # filename_patterns: ['*.npy', '*.tif', '*.tiff', '*.csv']
 
 
   writers:
