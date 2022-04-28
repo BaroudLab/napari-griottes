@@ -90,10 +90,12 @@ def read_griottes(
                 for k, v in pos.items()
             ]
         )
+        out = centers[["z", "y", "x"]]
     except IndexError:
         centers = pd.DataFrame(
             [{"y": v[0], "x": v[1], "label": k} for k, v in pos.items()]
         )
+        out = centers[["y", "x"]]
 
     lines = [[pos[i] for i in ids] for ids in list(G.edges)]
     try:
@@ -107,7 +109,7 @@ def read_griottes(
     print(lines)
     return [
         (
-            centers[["y", "x"]],
+            out,
             {"name": "Centers", "properties": centers},
             "points",
         ),
