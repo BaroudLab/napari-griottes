@@ -118,6 +118,7 @@ def make_graph(
                     {
                         "shape_type": "line",
                         "name": CNAME,
+                        "metadata": {"graph": G},
                     },
                     "shapes",
                 )
@@ -159,7 +160,7 @@ def make_graph(
             lines,
             {
                 "shape_type": "line",
-                "name": "Connections",
+                "name": CNAME,
                 "edge_width": weights,
                 "metadata": {"graph": G},
             },
