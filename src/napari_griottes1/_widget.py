@@ -104,8 +104,7 @@ def make_graph(
                 [[pos[i] for i in ids] for ids in list(G.edges)], dtype="int"
             )
             print(
-                f"{len(lines)} lines for {len(pos)} \
-                    positions computed, rendering..."
+                f"{len(lines)} lines for {len(pos)}  positions computed, rendering..."
             )
             # print(lines)
             try:

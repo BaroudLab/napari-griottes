@@ -11,6 +11,8 @@ import pandas
 import pandas as pd
 from tifffile import imread
 
+from ._widget import CNAME
+
 
 def napari_get_reader(path):
     """A basic implementation of a Reader contribution.
@@ -83,6 +85,7 @@ def read_griottes(
 
     G = nx.read_gpickle(path)
     pos = nx.get_node_attributes(G, "pos")
+
     try:
         centers = pd.DataFrame(
             [
@@ -98,15 +101,16 @@ def read_griottes(
         out = centers[["y", "x"]]
 
     lines = [[pos[i] for i in ids] for ids in list(G.edges)]
+
     try:
         weights = [0.2 * 1 * e[2]["weight"] for e in G.edges(data=True)]
     except (IndexError, KeyError):
-        print(
-            "no weights",
-        )
+        print("no weights")
         weights = [1] * len(pos)
-    print(centers)
-    print(lines)
+
+    print(
+        f"{len(lines)} lines for {len(centers)}  positions recovered, rendering..."
+    )
     return [
         (
             out,
@@ -117,7 +121,7 @@ def read_griottes(
             lines,
             {
                 "shape_type": "line",
-                "name": "Connections",
+                "name": CNAME,
                 "edge_width": weights,
                 "metadata": {"graph": G},
             },
