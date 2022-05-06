@@ -10,7 +10,6 @@ import numpy as np
 import pandas
 import pandas as pd
 from tifffile import imread
-
 from ._widget import CNAME
 
 
@@ -101,12 +100,11 @@ def read_griottes(
         out = centers[["y", "x"]]
 
     lines = [[pos[i] for i in ids] for ids in list(G.edges)]
-
     try:
         weights = [0.2 * 1 * e[2]["weight"] for e in G.edges(data=True)]
     except (IndexError, KeyError):
         print("no weights")
-        weights = [1] * len(pos)
+        weights = [1] * len(lines)
 
     print(
         f"{len(lines)} lines for {len(centers)}  positions recovered, rendering..."
