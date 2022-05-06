@@ -35,17 +35,12 @@ viewer = napari.current_viewer()
         "min": 10,
         "max": 150,
     },
-    thickness={
-        "widget_type": "Slider",
-        "min": 1,
-        "max": 5,
-    },
 )
 def make_graph(
     label_layer: "napari.layers.Labels",
     point_layer: "napari.layers.Points",
     graph: "str",
-    distance: "int" = 35,
+    distance: "int" = 85,
     thickness: "int" = 1,
 ) -> napari.types.LayerDataTuple:
 
