@@ -10,6 +10,7 @@ import numpy as np
 import pandas
 import pandas as pd
 from tifffile import imread
+
 from ._widget import CNAME
 
 

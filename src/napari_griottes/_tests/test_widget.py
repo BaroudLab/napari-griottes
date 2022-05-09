@@ -1,6 +1,6 @@
 import numpy as np
 
-from napari_griottes1 import ExampleQWidget, example_magic_widget
+from napari_griottes import ExampleQWidget, example_magic_widget
 
 
 # make_napari_viewer is a pytest fixture that returns a napari viewer object

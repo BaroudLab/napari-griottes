@@ -1,4 +1,4 @@
-# from napari_griottes1 import make_sample_data
+# from napari_griottes import make_sample_data
 
 # add your tests here...
 
