@@ -6,8 +6,7 @@
 [![tests](https://github.com/aaristov/napari-griottes1/workflows/tests/badge.svg)](https://github.com/aaristov/napari-griottes1/actions)
 [![codecov](https://codecov.io/gh/aaristov/napari-griottes1/branch/main/graph/badge.svg)](https://codecov.io/gh/aaristov/napari-griottes1)
 <!-- [![napari hub](https://img.shields.io/endpoint?url=https://api.napari-hub.org/shields/napari-griottes1)](https://napari-hub.org/plugins/napari-griottes1) -->
-
-Create graphs in napari using [🍒  `Griottes` 🍒](https://github.com/BaroudLab/Griottes) package
+Use [🍒  `Griottes` 🍒](https://github.com/BaroudLab/Griottes) in napari!
 
 ----------------------------------
 
