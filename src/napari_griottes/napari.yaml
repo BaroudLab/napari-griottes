@@ -6,15 +6,15 @@ contributions:
       python_name: napari_griottes._reader:napari_get_reader
       title: Open data with Griottes
 
-    - id: napari-griottes1.save_graph
+    - id: napari-griottes.save_graph
       python_name: napari_griottes._writer:save_graph
       title: Save graph with Griottes
 
-    - id: napari-griottes1.make_zebrafish_data
+    - id: napari-griottes.make_zebrafish_data
       python_name: napari_griottes._sample_data:make_zebrafish_data
       title: Load zebrafish sample data from Griottes
 
-    - id: napari-griottes1.make_cell_properties
+    - id: napari-griottes.make_cell_properties
       python_name: napari_griottes._sample_data:make_cell_properties
       title: Load zebrafish cell properties Griottes
 

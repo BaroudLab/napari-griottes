@@ -1,11 +1,11 @@
 # napari-griottes
 
-[![License](https://img.shields.io/pypi/l/napari-griottes1.svg?color=green)](https://github.com/aaristov/napari-griottes1/raw/main/LICENSE)
-<!-- [![PyPI](https://img.shields.io/pypi/v/napari-griottes1.svg?color=green)](https://pypi.org/project/napari-griottes1) -->
-[![Python Version](https://img.shields.io/pypi/pyversions/napari-griottes1.svg?color=green)](https://python.org)
-[![tests](https://github.com/aaristov/napari-griottes1/workflows/tests/badge.svg)](https://github.com/aaristov/napari-griottes1/actions)
-[![codecov](https://codecov.io/gh/aaristov/napari-griottes1/branch/main/graph/badge.svg)](https://codecov.io/gh/aaristov/napari-griottes1)
-<!-- [![napari hub](https://img.shields.io/endpoint?url=https://api.napari-hub.org/shields/napari-griottes1)](https://napari-hub.org/plugins/napari-griottes1) -->
+[![License](https://img.shields.io/pypi/l/napari-griottes.svg?color=green)](https://github.com/aaristov/napari-griottes/raw/main/LICENSE)
+<!-- [![PyPI](https://img.shields.io/pypi/v/napari-griottes.svg?color=green)](https://pypi.org/project/napari-griottes) -->
+[![Python Version](https://img.shields.io/pypi/pyversions/napari-griottes.svg?color=green)](https://python.org)
+[![tests](https://github.com/aaristov/napari-griottes/workflows/tests/badge.svg)](https://github.com/aaristov/napari-griottes/actions)
+[![codecov](https://codecov.io/gh/aaristov/napari-griottes/branch/main/graph/badge.svg)](https://codecov.io/gh/aaristov/napari-griottes)
+<!-- [![napari hub](https://img.shields.io/endpoint?url=https://api.napari-hub.org/shields/napari-griottes)](https://napari-hub.org/plugins/napari-griottes) -->
 Use [🍒  `Griottes` 🍒](https://github.com/BaroudLab/Griottes) in napari!
 
 ----------------------------------
@@ -22,7 +22,7 @@ https://napari.org/plugins/stable/index.html
 
 ## Installation
 
-You can install `napari-griottes1` via [pip]:
+You can install `napari-griottes` via [pip]:
 
     Not available yet
 
@@ -30,14 +30,14 @@ You can install `napari-griottes1` via [pip]:
 
 To install latest development version :
 
-    pip install git+https://github.com/aaristov/napari-griottes1.git
+    pip install git+https://github.com/aaristov/napari-griottes.git
 
 ## Usage
 
 ### Starting with labels:
 
-1. Open the plugin in Plugins/napari-griottes1
-2. Make sure the layer with labels is selected 
+1. Open the plugin in Plugins/napari-griottes
+2. Make sure the layer with labels is selected
 3. Click Run once to get centers
 4. Click Run second time to get graph
 5. Select the right kind of graph in the drop-down menu
@@ -51,7 +51,7 @@ https://user-images.githubusercontent.com/11408456/167371532-796650fe-dd19-4fed-
 
 ### Starting with Segmented cells
 
-1. Open sample data: File / Open Sample / napari-griottes1 / Zebrafish 2D with labels
+1. Open sample data: File / Open Sample / napari-griottes / Zebrafish 2D with labels
 2. Select the top layer and covert it to labels (right click - Convert to labels)
 3. Run the plugin once to get the centers of labels
 4. Run the plugin twice to get the connections
@@ -74,7 +74,7 @@ Any graph you see in napari can be saved in .griottes format which is networkx.g
 
 In order to recover a previously saved graph in napari, you can simply drag-n-drop your file into napari, or use file open fialog.
 
-Otherwise, you can open the graph with [neworkx.read_gpickle](https://networkx.org/documentation/stable/reference/readwrite/generated/networkx.readwrite.gpickle.read_gpickle.html) function 
+Otherwise, you can open the graph with [neworkx.read_gpickle](https://networkx.org/documentation/stable/reference/readwrite/generated/networkx.readwrite.gpickle.read_gpickle.html) function
 
 ## Contributing
 
@@ -84,7 +84,7 @@ the coverage at least stays the same before you submit a pull request.
 ## License
 
 Distributed under the terms of the [BSD-3] license,
-"napari-griottes1" is free and open source software
+"napari-griottes" is free and open source software
 
 ## Issues
 
@@ -101,7 +101,7 @@ If you encounter any problems, please [file an issue] along with a detailed desc
 [Mozilla Public License 2.0]: https://www.mozilla.org/media/MPL/2.0/index.txt
 [cookiecutter-napari-plugin]: https://github.com/napari/cookiecutter-napari-plugin
 
-[file an issue]: https://github.com/aaristov/napari-griottes1/issues
+[file an issue]: https://github.com/aaristov/napari-griottes/issues
 
 [napari]: https://github.com/napari/napari
 [tox]: https://tox.readthedocs.io/en/latest/
