@@ -1,11 +1,11 @@
 # napari-griottes1
 
 [![License](https://img.shields.io/pypi/l/napari-griottes1.svg?color=green)](https://github.com/aaristov/napari-griottes1/raw/main/LICENSE)
-[![PyPI](https://img.shields.io/pypi/v/napari-griottes1.svg?color=green)](https://pypi.org/project/napari-griottes1)
+<!-- [![PyPI](https://img.shields.io/pypi/v/napari-griottes1.svg?color=green)](https://pypi.org/project/napari-griottes1) -->
 [![Python Version](https://img.shields.io/pypi/pyversions/napari-griottes1.svg?color=green)](https://python.org)
 [![tests](https://github.com/aaristov/napari-griottes1/workflows/tests/badge.svg)](https://github.com/aaristov/napari-griottes1/actions)
 [![codecov](https://codecov.io/gh/aaristov/napari-griottes1/branch/main/graph/badge.svg)](https://codecov.io/gh/aaristov/napari-griottes1)
-[![napari hub](https://img.shields.io/endpoint?url=https://api.napari-hub.org/shields/napari-griottes1)](https://napari-hub.org/plugins/napari-griottes1)
+<!-- [![napari hub](https://img.shields.io/endpoint?url=https://api.napari-hub.org/shields/napari-griottes1)](https://napari-hub.org/plugins/napari-griottes1) -->
 
 Create graphs
 
@@ -25,13 +25,41 @@ https://napari.org/plugins/stable/index.html
 
 You can install `napari-griottes1` via [pip]:
 
-    pip install napari-griottes1
+    Not available yet
 
 
 
 To install latest development version :
 
     pip install git+https://github.com/aaristov/napari-griottes1.git
+
+## Usage
+
+### Starting with labels:
+
+1. Open the plugin in Plugins/napari-griottes1
+2. Make sure the layer with labels is selected 
+3. Click Run once to get centers
+4. Click Run second time to get graph
+5. Select the right kind of graph in the drop-down menu
+6. Adjust the distance
+7. Adjust thickness
+
+![Screenshot from three labels geometric contact mp4](https://user-images.githubusercontent.com/11408456/167371516-05db2ba5-cdfc-47c4-a488-8f46afd0ae5b.png)
+
+
+https://user-images.githubusercontent.com/11408456/167371532-796650fe-dd19-4fed-a328-a7ccd627c883.mp4
+
+### Starting with Segmented cells
+
+1. Convert the segmented layer to napari labels (right click - Convert to labels)
+2. Proceed with graph creation
+![Screenshot from cells graphs mp4](https://user-images.githubusercontent.com/11408456/167372895-3c9036b9-af50-4575-bcf3-1805eb261bd7.png)
+
+
+
+https://user-images.githubusercontent.com/11408456/167372921-305e9e3d-1480-430a-b1e5-5416d178c55b.mp4
+
 
 
 ## Contributing
