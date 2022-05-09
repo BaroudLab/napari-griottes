@@ -5,9 +5,12 @@ It implements the Reader specification, but your plugin may choose to
 implement multiple readers or even other plugin contributions. see:
 https://napari.org/plugins/stable/guides.html#readers
 """
+import networkx as nx
 import numpy as np
 import pandas
+import pandas as pd
 from tifffile import imread
+from ._widget import CNAME
 
 
 def napari_get_reader(path):
@@ -36,6 +39,9 @@ def napari_get_reader(path):
 
     if path.endswith(".csv"):
         return read_csv
+
+    if path.endswith(".griottes"):
+        return read_griottes
 
     # otherwise we return the *function* that can read ``path``.
     if path.endswith(".npy"):
@@ -70,6 +76,56 @@ def read_csv(path, **kwargs):
                 "points",
             )
         ]
+
+
+def read_griottes(
+    path,
+):
+
+    G = nx.read_gpickle(path)
+    pos = nx.get_node_attributes(G, "pos")
+
+    try:
+        centers = pd.DataFrame(
+            [
+                {"z": v[0], "y": v[1], "x": v[2], "label": k}
+                for k, v in pos.items()
+            ]
+        )
+        out = centers[["z", "y", "x"]]
+    except IndexError:
+        centers = pd.DataFrame(
+            [{"y": v[0], "x": v[1], "label": k} for k, v in pos.items()]
+        )
+        out = centers[["y", "x"]]
+
+    lines = [[pos[i] for i in ids] for ids in list(G.edges)]
+    try:
+        weights = [0.2 * 1 * e[2]["weight"] for e in G.edges(data=True)]
+    except (IndexError, KeyError):
+        print("no weights")
+        weights = [1] * len(lines)
+
+    print(
+        f"{len(lines)} lines for {len(centers)}  positions recovered, rendering..."
+    )
+    return [
+        (
+            out,
+            {"name": "Centers", "properties": centers},
+            "points",
+        ),
+        (
+            lines,
+            {
+                "shape_type": "line",
+                "name": CNAME,
+                "edge_width": weights,
+                "metadata": {"graph": G},
+            },
+            "shapes",
+        ),
+    ]
 
 
 def colorized_points(data, **kwargs):
