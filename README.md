@@ -1,4 +1,4 @@
-# napari-griottes1
+# napari-griottes
 
 [![License](https://img.shields.io/pypi/l/napari-griottes1.svg?color=green)](https://github.com/aaristov/napari-griottes1/raw/main/LICENSE)
 <!-- [![PyPI](https://img.shields.io/pypi/v/napari-griottes1.svg?color=green)](https://pypi.org/project/napari-griottes1) -->
@@ -7,7 +7,7 @@
 [![codecov](https://codecov.io/gh/aaristov/napari-griottes1/branch/main/graph/badge.svg)](https://codecov.io/gh/aaristov/napari-griottes1)
 <!-- [![napari hub](https://img.shields.io/endpoint?url=https://api.napari-hub.org/shields/napari-griottes1)](https://napari-hub.org/plugins/napari-griottes1) -->
 
-Create graphs
+Create graphs in napari using [🍒  `Griottes` 🍒](https://github.com/BaroudLab/Griottes) package
 
 ----------------------------------
 
