@@ -20,8 +20,15 @@ if TYPE_CHECKING:
 def save_graph(path: str, data: FullLayerData, props: dict, **kwargs):
     """Writes a single layer graph"""
     try:
-        nx.write_gpickle(props["metadata"]["graph"], (ppp:=(path if path.endswith(".griottes") else path + ".griottes")))
-        print(f'Saved graph to {ppp}')
+        nx.write_gpickle(
+            props["metadata"]["graph"],
+            (
+                ppp := (
+                    path if path.endswith(".griottes") else path + ".griottes"
+                )
+            ),
+        )
+        print(f"Saved graph to {ppp}")
     except KeyError:
         print("Grapth not found, choose another layer")
     return True

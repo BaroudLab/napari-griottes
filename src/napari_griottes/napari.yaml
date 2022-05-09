@@ -1,0 +1,46 @@
+name: napari-griottes
+display_name: Griottes
+contributions:
+  commands:
+    - id: napari-griottes.get_reader
+      python_name: napari_griottes._reader:napari_get_reader
+      title: Open data with Griottes
+
+    - id: napari-griottes1.save_graph
+      python_name: napari_griottes._writer:save_graph
+      title: Save graph with Griottes
+
+    - id: napari-griottes1.make_zebrafish_data
+      python_name: napari_griottes._sample_data:make_zebrafish_data
+      title: Load zebrafish sample data from Griottes
+
+    - id: napari-griottes1.make_cell_properties
+      python_name: napari_griottes._sample_data:make_cell_properties
+      title: Load zebrafish cell properties Griottes
+
+    - id: napari-griottes.make_graph
+      python_name: napari_griottes._widget:make_graph
+      title: Make graph
+
+
+  readers:
+    - command: napari-griottes.get_reader
+      accepts_directories: false
+      filename_patterns: ['*.npy', '*.tif', '*.tiff', '*.csv','*.griottes']
+
+  writers:
+    - command: napari-griottes.save_graph
+      layer_types: ['shapes']
+      filename_extensions: ['.griottes']
+
+
+  sample_data:
+    - command: napari-griottes.make_cell_properties
+      display_name: Cell properties table 3D
+      key: csv
+    - command: napari-griottes.make_zebrafish_data
+      display_name: Zebrafish 2D with labels
+      key: zebra
+  widgets:
+    - command: napari-griottes.make_graph
+      display_name: Make graph

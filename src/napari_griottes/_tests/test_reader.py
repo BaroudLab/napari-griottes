@@ -1,5 +1,6 @@
 import numpy as np
-from napari_griottes1 import napari_get_reader
+
+from napari_griottes import napari_get_reader
 
 
 # tmp_path is a pytest fixture
