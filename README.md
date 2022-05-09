@@ -52,8 +52,9 @@ https://user-images.githubusercontent.com/11408456/167371532-796650fe-dd19-4fed-
 
 ### Starting with Segmented cells
 
-1. Convert the segmented layer to napari labels (right click - Convert to labels)
-2. Proceed with graph creation
+1. Open sample data: File / Open Sample / napari-griottes1 / Zebrafish 2D with labels
+2. Convert the segmented layer to napari labels (right click - Convert to labels)
+3. Proceed with graph creation
 ![Screenshot from cells graphs mp4](https://user-images.githubusercontent.com/11408456/167372895-3c9036b9-af50-4575-bcf3-1805eb261bd7.png)
 
 
@@ -62,13 +63,15 @@ https://user-images.githubusercontent.com/11408456/167372921-305e9e3d-1480-430a-
 
 ### Saving and recovering the graph
 
-Any graph you see in napari can be saved as .griottes format which embeds a networkx.gpickle inside.
+Any graph you see in napari can be saved in .griottes format which is networkx.gpickle inside.
 1. Select he layers with connections
 2. Click File/Save Selected Layer
 3. Choose Griottes in drop-down menu
 4. Save
 
-In order to recover a previously saved graph, you can simly drag-n-drop your file into napari, or use file open fialog.
+In order to recover a previously saved graph in napari, you can simply drag-n-drop your file into napari, or use file open fialog.
+
+Otherwise, you can open the graph with [neworkx.read_gpickle](https://networkx.org/documentation/stable/reference/readwrite/generated/networkx.readwrite.gpickle.read_gpickle.html) function 
 
 ## Contributing
 
