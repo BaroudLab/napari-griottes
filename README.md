@@ -60,7 +60,15 @@ https://user-images.githubusercontent.com/11408456/167371532-796650fe-dd19-4fed-
 
 https://user-images.githubusercontent.com/11408456/167372921-305e9e3d-1480-430a-b1e5-5416d178c55b.mp4
 
+### Saving and recovering the graph
 
+Any graph you see in napari can be saved as .griottes format which embeds a networkx.gpickle inside.
+1. Select he layers with connections
+2. Click File/Save Selected Layer
+3. Choose Griottes in drop-down menu
+4. Save
+
+In order to recover a previously saved graph, you can simly drag-n-drop your file into napari, or use file open fialog.
 
 ## Contributing
 
