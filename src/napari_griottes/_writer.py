@@ -31,7 +31,7 @@ def save_graph(path: str, data: FullLayerData, props: dict, **kwargs):
         print(f"Saved graph to {ppp}")
     except KeyError:
         print("Grapth not found, choose another layer")
-    return True
+    return [ppp]
 
 
 # (
