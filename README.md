@@ -32,6 +32,12 @@ To install latest development version :
 
     pip install git+https://github.com/aaristov/napari-griottes.git
 
+
+
+https://user-images.githubusercontent.com/11408456/167825541-29f48bd3-ed71-4553-8079-e70733d5ae48.mp4
+
+
+
 ## Usage
 
 ### Starting with labels:
@@ -47,7 +53,10 @@ To install latest development version :
 ![Screenshot from three labels geometric contact mp4](https://user-images.githubusercontent.com/11408456/167371516-05db2ba5-cdfc-47c4-a488-8f46afd0ae5b.png)
 
 
-https://user-images.githubusercontent.com/11408456/167371532-796650fe-dd19-4fed-a328-a7ccd627c883.mp4
+
+https://user-images.githubusercontent.com/11408456/167825581-47c39884-34cf-4b5c-ad84-a4572217559d.mp4
+
+
 
 ### Starting with Segmented cells
 
