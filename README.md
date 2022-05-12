@@ -1,8 +1,8 @@
 # napari-griottes
 
-[![License](https://img.shields.io/pypi/l/napari-griottes.svg?color=green)](https://github.com/BaroudLab/napari-griottes/raw/main/LICENSE)
+<!-- [![License](https://img.shields.io/pypi/l/napari-griottes.svg?color=green)](https://github.com/BaroudLab/napari-griottes/raw/main/LICENSE) -->
 <!-- [![PyPI](https://img.shields.io/pypi/v/napari-griottes.svg?color=green)](https://pypi.org/project/napari-griottes) -->
-[![Python Version](https://img.shields.io/pypi/pyversions/napari-griottes.svg?color=green)](https://python.org)
+<!-- [![Python Version](https://img.shields.io/pypi/pyversions/napari-griottes.svg?color=green)](https://python.org) -->
 [![tests](https://github.com/BaroudLab/napari-griottes/workflows/tests/badge.svg)](https://github.com/BaroudLab/napari-griottes/actions)
 [![codecov](https://codecov.io/gh/BaroudLab/napari-griottes/branch/main/graph/badge.svg)](https://codecov.io/gh/BaroudLab/napari-griottes)
 
