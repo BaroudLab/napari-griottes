@@ -5,6 +5,7 @@
 [![Python Version](https://img.shields.io/pypi/pyversions/napari-griottes.svg?color=green)](https://python.org)
 [![tests](https://github.com/BaroudLab/napari-griottes/workflows/tests/badge.svg)](https://github.com/BaroudLab/napari-griottes/actions)
 [![codecov](https://codecov.io/gh/BaroudLab/napari-griottes/branch/main/graph/badge.svg)](https://codecov.io/gh/BaroudLab/napari-griottes)
+
 <!-- [![napari hub](https://img.shields.io/endpoint?url=https://api.napari-hub.org/shields/napari-griottes)](https://napari-hub.org/plugins/napari-griottes) -->
 Use [🍒  `Griottes` 🍒](https://github.com/BaroudLab/Griottes) in napari!
 
@@ -32,6 +33,12 @@ To install latest development version :
 
     pip install git+https://github.com/BaroudLab/napari-griottes.git
 
+
+
+https://user-images.githubusercontent.com/11408456/167825541-29f48bd3-ed71-4553-8079-e70733d5ae48.mp4
+
+
+
 ## Usage
 
 ### Starting with labels:
@@ -47,7 +54,10 @@ To install latest development version :
 ![Screenshot from three labels geometric contact mp4](https://user-images.githubusercontent.com/11408456/167371516-05db2ba5-cdfc-47c4-a488-8f46afd0ae5b.png)
 
 
-https://user-images.githubusercontent.com/11408456/167371532-796650fe-dd19-4fed-a328-a7ccd627c883.mp4
+
+https://user-images.githubusercontent.com/11408456/167825581-47c39884-34cf-4b5c-ad84-a4572217559d.mp4
+
+
 
 ### Starting with Segmented cells
 
@@ -73,6 +83,11 @@ Any graph you see in napari can be saved in .griottes format which is networkx.g
 4. Save
 
 In order to recover a previously saved graph in napari, you can simply drag-n-drop your file into napari, or use file open fialog.
+
+
+
+https://user-images.githubusercontent.com/11408456/167845853-e7071199-3f58-4d11-8d7b-c1358a150e6b.mp4
+
 
 Otherwise, you can open the graph with [neworkx.read_gpickle](https://networkx.org/documentation/stable/reference/readwrite/generated/networkx.readwrite.gpickle.read_gpickle.html) function
 
