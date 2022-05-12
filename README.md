@@ -1,10 +1,11 @@
 # napari-griottes
 
-<!-- [![License](https://img.shields.io/pypi/l/napari-griottes.svg?color=green)](https://github.com/aaristov/napari-griottes/raw/main/LICENSE) -->
+[![License](https://img.shields.io/pypi/l/napari-griottes.svg?color=green)](https://github.com/BaroudLab/napari-griottes/raw/main/LICENSE)
 <!-- [![PyPI](https://img.shields.io/pypi/v/napari-griottes.svg?color=green)](https://pypi.org/project/napari-griottes) -->
-<!-- [![Python Version](https://img.shields.io/pypi/pyversions/napari-griottes.svg?color=green)](https://python.org) -->
-[![tests](https://github.com/aaristov/napari-griottes/workflows/tests/badge.svg)](https://github.com/aaristov/napari-griottes/actions)
-<!-- [![codecov](https://codecov.io/gh/aaristov/napari-griottes/branch/main/graph/badge.svg)](https://codecov.io/gh/aaristov/napari-griottes) -->
+[![Python Version](https://img.shields.io/pypi/pyversions/napari-griottes.svg?color=green)](https://python.org)
+[![tests](https://github.com/BaroudLab/napari-griottes/workflows/tests/badge.svg)](https://github.com/BaroudLab/napari-griottes/actions)
+[![codecov](https://codecov.io/gh/BaroudLab/napari-griottes/branch/main/graph/badge.svg)](https://codecov.io/gh/BaroudLab/napari-griottes)
+
 <!-- [![napari hub](https://img.shields.io/endpoint?url=https://api.napari-hub.org/shields/napari-griottes)](https://napari-hub.org/plugins/napari-griottes) -->
 Use [🍒  `Griottes` 🍒](https://github.com/BaroudLab/Griottes) in napari!
 
@@ -30,7 +31,7 @@ You can install `napari-griottes` via [pip]:
 
 To install latest development version :
 
-    pip install git+https://github.com/aaristov/napari-griottes.git
+    pip install git+https://github.com/BaroudLab/napari-griottes.git
 
 
 
@@ -115,7 +116,7 @@ If you encounter any problems, please [file an issue] along with a detailed desc
 [Mozilla Public License 2.0]: https://www.mozilla.org/media/MPL/2.0/index.txt
 [cookiecutter-napari-plugin]: https://github.com/napari/cookiecutter-napari-plugin
 
-[file an issue]: https://github.com/aaristov/napari-griottes/issues
+[file an issue]: https://github.com/BaroudLab/napari-griottes/issues
 
 [napari]: https://github.com/napari/napari
 [tox]: https://tox.readthedocs.io/en/latest/
