@@ -25,7 +25,7 @@ viewer = napari.current_viewer()
 
 
 @magic_factory(
-    auto_call=False,
+    auto_call=True,
     graph={
         "widget_type": "ComboBox",
         "choices": FUNCS.keys(),
@@ -98,8 +98,9 @@ def make_graph(
             lines = np.array(
                 [[pos[i] for i in ids] for ids in list(G.edges)], dtype="int"
             )
+            vectors = [np.vstack([v[0],np.diff(v, axis=0)]) for v in lines]
             print(
-                f"{len(lines)} lines for {len(pos)}  positions computed, rendering..."
+                f"{len(lines)} edges for {len(pos)}  positions computed, rendering..."
             )
             # print(lines)
             try:
@@ -108,13 +109,12 @@ def make_graph(
                 pass
             return [
                 (
-                    lines,
+                    vectors,
                     {
-                        "shape_type": "line",
                         "name": CNAME,
                         "metadata": {"graph": G},
                     },
-                    "shapes",
+                    "vectors",
                 )
             ]
         except ValueError:
