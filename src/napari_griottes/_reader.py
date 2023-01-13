@@ -130,6 +130,7 @@ def read_griottes(
 
 
 def colorized_points(data, **kwargs):
+    data.loc[:,"colors_napari"] = data["cell_type"] / data["cell_type"].max()
     return [
         (
             data[["z", "y", "x"]].values,
@@ -138,8 +139,8 @@ def colorized_points(data, **kwargs):
                     ndim=3,
                     size=5,
                     properties=data,
-                    face_color="cell_type",
-                    face_color_cycle=["#ff00ff", "#ffff00", "#00ffff"],
+                    face_color="colors_napari",
+                    face_colormap='viridis',
                     opacity=0.5,
                 ),
                 **kwargs,
