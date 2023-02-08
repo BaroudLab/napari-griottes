@@ -183,5 +183,5 @@ def reader_numpy(path):
     # optional kwargs for the corresponding viewer.add_* method
     add_kwargs = {}
 
-    layer_type = "image"  # optional, default is "image"
+    layer_type = "labels"  # optional, default is "image"
     return [(data, add_kwargs, layer_type)]
