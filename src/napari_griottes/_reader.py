@@ -12,6 +12,9 @@ import pandas as pd
 from tifffile import imread
 
 from ._widget import CNAME
+import logging 
+POINT_PARAMS = {"size":10,  "opacity": .8}
+
 
 
 def napari_get_reader(path):
@@ -69,15 +72,41 @@ def read_csv(path, **kwargs):
     data = pandas.read_csv(path, index_col=None)
     try:
         return colorized_points(data, metadata={"path": path})
-    except KeyError:
+    except Exception as e:
+        logging.error(f"Unable to apply colors: {e}")
         return [
             (
                 data[["y", "x"]].values,
-                {"metadata": {"path": path}, **kwargs},
+                
+                {"metadata": {"path": path}, "properties":data, **kwargs},
                 "points",
             )
         ]
 
+def colorized_points(data, **kwargs):
+    data.loc[:,"colors_napari"] = data["cell_type"] / data["cell_type"].max()
+    try:
+        out = data[["z", "y", "x"]].values 
+        ndims=3
+    except KeyError:
+        out = data[["y", "x"]].values 
+        ndims=2
+    return [
+        (
+            out,
+            {
+                **dict(
+                    ndim=ndims,
+                    properties=data,
+                    face_color="colors_napari",
+                    face_colormap='viridis',
+                    **POINT_PARAMS
+                ),
+                **kwargs,
+            },
+            "points",
+        )
+    ]
 
 def read_griottes(
     path,
@@ -129,25 +158,6 @@ def read_griottes(
     ]
 
 
-def colorized_points(data, **kwargs):
-    data.loc[:,"colors_napari"] = data["cell_type"] / data["cell_type"].max()
-    return [
-        (
-            data[["z", "y", "x"]].values,
-            {
-                **dict(
-                    ndim=3,
-                    size=5,
-                    properties=data,
-                    face_color="colors_napari",
-                    face_colormap='viridis',
-                    opacity=0.5,
-                ),
-                **kwargs,
-            },
-            "points",
-        )
-    ]
 
 
 def reader_numpy(path):
