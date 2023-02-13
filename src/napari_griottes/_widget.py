@@ -14,11 +14,15 @@ import numpy as np
 import pandas as pd
 from magicgui import magic_factory
 from qtpy.QtWidgets import QHBoxLayout, QPushButton, QWidget
+import logging
+
+logger = logging.getLogger("griottes.widget")
+logger.setLevel(logging.INFO)
 
 FUNCS = {
-    "Geometric graph": griottes.generate_geometric_graph,
     "Delaunay": griottes.generate_delaunay_graph,
     "Contact_graph": griottes.generate_contact_graph,
+    "Geometric graph": griottes.generate_geometric_graph,
 }
 CNAME = "Connections"
 viewer = napari.current_viewer()
@@ -44,9 +48,9 @@ def make_graph(
     thickness: "int" = 1,
 ) -> napari.types.LayerDataTuple:
 
-    # print(f"you have selected {img_layer}, {img_layer.data.shape}")
+    # logger.info(f"you have selected {img_layer}, {img_layer.data.shape}")
     if point_layer is None:
-        print("No points, generating")
+        logger.info("No points, generating")
         raw_centers = (
             griottes.analyse.cell_property_extraction.get_nuclei_properties(
                 label_layer.data, mask_channel=None
@@ -63,12 +67,12 @@ def make_graph(
             return [
                 (
                     centers[["z", "y", "x"]],
-                    {"name": "Centers", "properties": centers},
+                    {"name": "Centers", "properties": centers, **POINT_PARAMS},
                     "points",
                 ),
             ]
         except KeyError:
-            # print("centers 2D")
+            # logger.info("centers 2D")
             centers = raw_centers.rename(
                 columns={
                     "centroid-0": "y",
@@ -78,16 +82,18 @@ def make_graph(
             return [
                 (
                     centers[["y", "x"]],
-                    {"name": "Centers", "properties": centers},
+                    {"name": "Centers", "properties": centers, **POINT_PARAMS},
                     "points",
                 ),
             ]
     data = pd.DataFrame(point_layer.properties)
     repr(data.head())
     weights = thickness
+    logger.info(f"{len(data)} nodes")
+    logger.info(f"{graph}")
     if "z" in data.columns:
         try:
-            print("Graph in 3D")
+            logger.info("Graph in 3D")
             weights = thickness * 0.2
             G = FUNCS[graph](
                 data[["z", "y", "x", "label"]],
@@ -99,10 +105,10 @@ def make_graph(
                 [[pos[i] for i in ids] for ids in list(G.edges)], dtype="int"
             )
             vectors = [np.vstack([v[0],np.diff(v, axis=0)]) for v in lines]
-            print(
+            logger.info(
                 f"{len(lines)} edges for {len(pos)}  positions computed, rendering..."
             )
-            # print(lines)
+            # logger.info(lines)
             try:
                 viewer.layers.remove(CNAME)
             except ValueError:
@@ -118,10 +124,10 @@ def make_graph(
                 )
             ]
         except ValueError:
-            print("ValueError")
+            logger.error("ValueError")
     else:
         try:
-            print("Graph in 2D,")
+            logger.info("Graph in 2D")
 
             G = FUNCS[graph](
                 data[["x", "y", "label"]],
@@ -132,8 +138,12 @@ def make_graph(
             pos = nx.get_node_attributes(G, "pos")
             # yx = {k:(v[1], v[0]) for k,v in pos.items()}
             lines = [[pos[i] for i in ids] for ids in list(G.edges)]
+
+            vectors = [np.vstack([v[0],np.diff(v, axis=0)]) for v in lines]
+            logger.info(
+                f"{len(lines)} edges for {len(pos)}  positions computed, rendering...")
         except TypeError:
-            print("contact graph")
+            logger.info("contact graph")
             G = FUNCS[graph](
                 label_layer.data,
             )
@@ -145,20 +155,19 @@ def make_graph(
                     for e in G.edges(data=True)
                 ]
             except IndexError:
-                print(
+                logger.info(
                     "weights failed!",
                 )
 
     return [
         (
-            lines,
+            vectors,
             {
-                "shape_type": "line",
                 "name": CNAME,
                 "edge_width": weights,
                 "metadata": {"graph": G},
             },
-            "shapes",
+            "vectors",
         )
     ]
 
@@ -179,9 +188,9 @@ class ExampleQWidget(QWidget):
         self.layout().addWidget(btn)
 
     def _on_click(self):
-        print("napari has", len(self.viewer.layers), "layers")
+        logger.info("napari has", len(self.viewer.layers), "layers")
 
 
 @magic_factory
 def example_magic_widget(img_layer: "napari.layers.Image"):
-    print(f"you have selected {img_layer}")
+    logger.info(f"you have selected {img_layer}")
