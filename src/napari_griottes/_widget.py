@@ -15,7 +15,7 @@ import pandas as pd
 from magicgui import magic_factory
 from qtpy.QtWidgets import QHBoxLayout, QPushButton, QWidget
 import logging
-from ./_reader import POINT_PARAM
+from ._reader import POINT_PARAM
 
 logger = logging.getLogger("griottes.widget")
 logger.setLevel(logging.INFO)
