@@ -9,12 +9,12 @@ Replace code below according to your needs.
 import griottes
 import napari
 import networkx as nx
-import numpy
 import numpy as np
 import pandas as pd
 from magicgui import magic_factory
 from qtpy.QtWidgets import QHBoxLayout, QPushButton, QWidget
 import logging
+import pickle
 
 logger = logging.getLogger("griottes.widget")
 logger.setLevel(logging.INFO)
@@ -25,7 +25,7 @@ FUNCS = {
     "Geometric graph": griottes.generate_geometric_graph,
 }
 CNAME = "Connections"
-POINT_PARAMS = {"size":10,  "opacity": .8}
+POINT_PARAMS = {"size":10,  "opacity": .8, "name": "Centers"}
 
 @magic_factory()
 def save_graph(
@@ -57,6 +57,7 @@ def make_graph(
 ) -> napari.types.LayerDataTuple:
 
     # logger.info(f"you have selected {img_layer}, {img_layer.data.shape}")
+    datapath = label_layer.source.path
     savepath = None if datapath is None else datapath + ".graph.griottes"
 
     if point_layer is None:
@@ -141,9 +142,25 @@ def make_graph(
         )
     ]
 
+def save_and_return_layer(vectors, graph, weights=None, path=None):
+    if path:
+        _save_graph(graph=graph, path=path)
+    return [
+        (
+            vectors,
+            {
+                "name": CNAME,
+                "edge_width": weights if weights is not None else 1,
+                "metadata": {"graph": graph},
+            },
+            "vectors",
+        )
+    ]
+
+
 def _save_graph(graph, path):
     try:
-        nx.write_gpickle(
+        pickle.dump(
             graph,
             (
                 ppp := (
@@ -175,7 +192,7 @@ def make_point_layer(label_layer):
         return [
             (
                 centers[["z", "y", "x"]],
-                {"name": "Centers", "properties": centers, **POINT_PARAMS},
+                {"properties": centers, **POINT_PARAMS},
                 "points",
             ),
         ]
@@ -190,30 +207,7 @@ def make_point_layer(label_layer):
         return [
             (
                 centers[["y", "x"]],
-                {"name": "Centers", "properties": centers, **POINT_PARAMS},
+                {"properties": centers, **POINT_PARAMS},
                 "points",
             ),
         ]
-
-class ExampleQWidget(QWidget):
-    # your QWidget.__init__ can optionally request the napari viewer instance
-    # in one of two ways:
-    # 1. use a parameter called `napari_viewer`, as done here
-    # 2. use a type annotation of 'napari.viewer.Viewer' for any parameter
-    def __init__(self, napari_viewer):
-        super().__init__()
-        self.viewer = napari_viewer
-
-        btn = QPushButton("Click me!")
-        btn.clicked.connect(self._on_click)
-
-        self.setLayout(QHBoxLayout())
-        self.layout().addWidget(btn)
-
-    def _on_click(self):
-        logger.info("napari has", len(self.viewer.layers), "layers")
-
-
-@magic_factory
-def example_magic_widget(img_layer: "napari.layers.Image"):
-    logger.info(f"you have selected {img_layer}")
