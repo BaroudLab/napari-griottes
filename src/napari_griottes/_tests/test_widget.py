@@ -14,12 +14,10 @@ def test_make_graph(make_napari_viewer, capsys):
 
     # if we "call" this object, it'll execute our function
     points, meta, _ = my_widget(viewer.layers["labels"])[0]
-    viewer.add_points(points, **meta)
 
     assert len(viewer.layers) == nlayers + 1
 
     vectors, meta, _ = my_widget(viewer.layers["labels"], viewer.layers[POINT_PARAMS["name"]])[0]
-    viewer.add_vectors(vectors, **meta)
 
     assert len(viewer.layers) == nlayers + 2
     
