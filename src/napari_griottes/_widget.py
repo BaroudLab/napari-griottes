@@ -171,7 +171,8 @@ def _save_graph(graph, path):
         print(f"Saved graph to {ppp}")
         return [ppp]
     except Exception as e:
-        print(f"Unable to save the graph: {e}")
+        print(f"Unable to save the graph to {ppp}: {e}")
+
         return None
 
 def make_point_layer(label_layer):
