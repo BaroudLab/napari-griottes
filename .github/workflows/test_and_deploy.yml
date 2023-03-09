@@ -16,7 +16,7 @@ on:
       - npe2
   workflow_dispatch:
 
-permissions: read-all|write-all
+permissions: write-all
 
 jobs:
   test:
