@@ -10,6 +10,10 @@ contributions:
       python_name: napari_griottes._writer:save_graph
       title: Save graph with Griottes
 
+    - id: napari-griottes.save_graph_widget
+      python_name: napari_griottes._widget:save_graph
+      title: Save graph 
+
     - id: napari-griottes.make_zebrafish_data
       python_name: napari_griottes._sample_data:make_zebrafish_data
       title: Load zebrafish sample data from Griottes
@@ -44,3 +48,5 @@ contributions:
   widgets:
     - command: napari-griottes.make_graph
       display_name: Make graph
+    - command: napari-griottes.save_graph_widget
+      display_name: Save graph

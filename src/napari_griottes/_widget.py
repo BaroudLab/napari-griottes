@@ -27,7 +27,14 @@ FUNCS = {
 CNAME = "Connections"
 POINT_PARAMS = {"size":10,  "opacity": .8}
 
-
+@magic_factory()
+def save_graph(
+    graph_layer: "napari.layers.Vectors",
+    path: str
+):
+    graph = graph_layer.metadata["graph"]
+    return _save_graph(graph=graph, path=path)
+    
 
 @magic_factory(
     auto_call=True,
@@ -133,6 +140,22 @@ def make_graph(
             "vectors",
         )
     ]
+
+def _save_graph(graph, path):
+    try:
+        nx.write_gpickle(
+            graph,
+            (
+                ppp := (
+                    path if path.endswith(".griottes") else path + ".griottes"
+                )
+            ),
+        )
+        print(f"Saved graph to {ppp}")
+        return [ppp]
+    except Exception as e:
+        print(f"Unable to save the graph: {e}")
+        return None
 
 def make_point_layer(label_layer):
     logger.info("No points, generating")
