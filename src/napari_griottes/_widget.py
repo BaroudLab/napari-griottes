@@ -134,6 +134,43 @@ def make_graph(
         )
     ]
 
+def make_point_layer(label_layer):
+    logger.info("No points, generating")
+    raw_centers = (
+        griottes.analyse.cell_property_extraction.get_nuclei_properties(
+            label_layer.data, mask_channel=None
+        )
+    )
+    try:
+        centers = raw_centers.rename(
+            columns={
+                "centroid-0": "z",
+                "centroid-1": "y",
+                "centroid-2": "x",
+            }
+        )
+        return [
+            (
+                centers[["z", "y", "x"]],
+                {"name": "Centers", "properties": centers, **POINT_PARAMS},
+                "points",
+            ),
+        ]
+    except KeyError:
+        # logger.info("centers 2D")
+        centers = raw_centers.rename(
+            columns={
+                "centroid-0": "y",
+                "centroid-1": "x",
+            }
+        )
+        return [
+            (
+                centers[["y", "x"]],
+                {"name": "Centers", "properties": centers, **POINT_PARAMS},
+                "points",
+            ),
+        ]
 
 class ExampleQWidget(QWidget):
     # your QWidget.__init__ can optionally request the napari viewer instance
