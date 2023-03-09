@@ -22,7 +22,9 @@ def test_make_graph(make_napari_viewer, capsys):
     assert len(viewer.layers) == nlayers + 2
     
     saver = save_graph()
+    savepath = os.path.join(os.path.curdir, "test.griottes")
+    
+    saver(viewer.layers[-1], path=savepath)
 
-    saver(viewer.layers[-1], path="~/.griottes/test")
-
-    assert os.path.exists("test.griottes")
+    assert os.path.exists(savepath)
+    os.remove(savepath)

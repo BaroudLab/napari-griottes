@@ -15,6 +15,7 @@ from magicgui import magic_factory
 from qtpy.QtWidgets import QHBoxLayout, QPushButton, QWidget
 import logging
 import pickle
+import os
 
 logger = logging.getLogger("griottes.widget")
 logger.setLevel(logging.INFO)
@@ -160,18 +161,14 @@ def save_and_return_layer(vectors, graph, weights=None, path=None):
 
 def _save_graph(graph, path):
     try:
-        pickle.dump(
-            graph,
-            (
-                ppp := (
-                    path if path.endswith(".griottes") else path + ".griottes"
-                )
-            ),
-        )
-        print(f"Saved graph to {ppp}")
-        return [ppp]
+        savepath = path if path.endswith(".griottes") else path + ".griottes"
+        assert not os.path.exists(savepath), f"File exists: {savepath}"
+        with open(path, 'wb') as f:
+            pickle.dump(graph, f)
+        print(f"Saved graph to {savepath}")
+        return [savepath]
     except Exception as e:
-        print(f"Unable to save the graph to {ppp}: {e}")
+        print(f"Unable to save the graph to {savepath}: {e}")
 
         return None
 
