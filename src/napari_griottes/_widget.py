@@ -163,7 +163,7 @@ def _save_graph(graph, path):
     try:
         savepath = path if path.endswith(".griottes") else path + ".griottes"
         assert not os.path.exists(savepath), f"File exists: {savepath}"
-        with open(path, 'wb') as f:
+        with open(savepath, 'wb') as f:
             pickle.dump(graph, f)
         print(f"Saved graph to {savepath}")
         return [savepath]
