@@ -11,7 +11,9 @@ import pandas
 import pandas as pd
 from tifffile import imread
 
-from ._widget import CNAME
+from ._widget import CNAME, POINT_PARAMS
+import logging 
+
 
 
 def napari_get_reader(path):
@@ -69,15 +71,41 @@ def read_csv(path, **kwargs):
     data = pandas.read_csv(path, index_col=None)
     try:
         return colorized_points(data, metadata={"path": path})
-    except KeyError:
+    except Exception as e:
+        logging.error(f"Unable to apply colors: {e}")
         return [
             (
                 data[["y", "x"]].values,
-                {"metadata": {"path": path}, **kwargs},
+                
+                {"metadata": {"path": path}, "properties":data, **kwargs},
                 "points",
             )
         ]
 
+def colorized_points(data, **kwargs):
+    data.loc[:,"colors_napari"] = data["cell_type"] / data["cell_type"].max()
+    try:
+        out = data[["z", "y", "x"]].values 
+        ndims=3
+    except KeyError:
+        out = data[["y", "x"]].values 
+        ndims=2
+    return [
+        (
+            out,
+            {
+                **dict(
+                    ndim=ndims,
+                    properties=data,
+                    face_color="colors_napari",
+                    face_colormap='viridis',
+                    **POINT_PARAMS
+                ),
+                **kwargs,
+            },
+            "points",
+        )
+    ]
 
 def read_griottes(
     path,
@@ -129,24 +157,6 @@ def read_griottes(
     ]
 
 
-def colorized_points(data, **kwargs):
-    return [
-        (
-            data[["z", "y", "x"]].values,
-            {
-                **dict(
-                    ndim=3,
-                    size=5,
-                    properties=data,
-                    face_color="cell_type",
-                    face_color_cycle=["#ff00ff", "#ffff00", "#00ffff"],
-                    opacity=0.5,
-                ),
-                **kwargs,
-            },
-            "points",
-        )
-    ]
 
 
 def reader_numpy(path):
@@ -175,12 +185,12 @@ def reader_numpy(path):
     # handle both a string and a list of strings
     paths = [path] if isinstance(path, str) else path
     # load all files into array
-    arrays = [np.load(_path) for _path in paths]
+    arrays = [np.load(_path, allow_pickle=True).item()["masks"] for _path in paths]
     # stack arrays into single array
     data = np.squeeze(np.stack(arrays))
 
     # optional kwargs for the corresponding viewer.add_* method
     add_kwargs = {}
 
-    layer_type = "image"  # optional, default is "image"
+    layer_type = "labels"  # optional, default is "image"
     return [(data, add_kwargs, layer_type)]
