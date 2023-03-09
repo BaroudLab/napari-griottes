@@ -15,7 +15,6 @@ import pandas as pd
 from magicgui import magic_factory
 from qtpy.QtWidgets import QHBoxLayout, QPushButton, QWidget
 import logging
-from ._reader import POINT_PARAM
 
 logger = logging.getLogger("griottes.widget")
 logger.setLevel(logging.INFO)
@@ -26,8 +25,8 @@ FUNCS = {
     "Geometric graph": griottes.generate_geometric_graph,
 }
 CNAME = "Connections"
+POINT_PARAMS = {"size":10,  "opacity": .8}
 
-viewer = napari.current_viewer()
 
 
 @magic_factory(
@@ -110,11 +109,6 @@ def make_graph(
             logger.info(
                 f"{len(lines)} edges for {len(pos)}  positions computed, rendering..."
             )
-            # logger.info(lines)
-            try:
-                viewer.layers.remove(CNAME)
-            except ValueError:
-                pass
             return [
                 (
                     vectors,

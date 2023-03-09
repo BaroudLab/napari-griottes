@@ -11,9 +11,8 @@ import pandas
 import pandas as pd
 from tifffile import imread
 
-from ._widget import CNAME
+from ._widget import CNAME, POINT_PARAMS
 import logging 
-POINT_PARAMS = {"size":10,  "opacity": .8}
 
 
 
