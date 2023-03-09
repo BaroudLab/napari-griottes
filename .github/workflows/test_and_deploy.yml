@@ -35,7 +35,7 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
           cache: 
-            .cache/pip
+            .griottes
 
       # these libraries enable testing on Qt on linux
       - uses: tlambert03/setup-qt-libs@v1
