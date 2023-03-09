@@ -23,9 +23,14 @@ https://napari.org/plugins/stable/index.html
 
 ## Installation
 
+Install from napari
+
+![image](https://user-images.githubusercontent.com/11408456/224108834-f484ba37-50f4-415e-bdfb-509c6c5b88c4.png)
+
+
 You can install `napari-griottes` via [pip]:
 
-    Not available yet
+    pip install napari-griottes
 
 
 
