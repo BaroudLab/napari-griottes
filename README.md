@@ -11,15 +11,12 @@ Use [🍒  `Griottes` 🍒](https://github.com/BaroudLab/Griottes) in napari!
 
 ----------------------------------
 
-This [napari] plugin was generated with [Cookiecutter] using [@napari]'s [cookiecutter-napari-plugin] template.
 
-<!--
-Don't miss the full getting started guide to set up your new package:
-https://github.com/napari/cookiecutter-napari-plugin#getting-started
 
-and review the napari docs for plugin developers:
-https://napari.org/plugins/stable/index.html
--->
+https://user-images.githubusercontent.com/11408456/224119160-c381091d-8275-449e-9cf4-679ab474acd2.mp4
+
+
+
 
 ## Installation
 
@@ -37,10 +34,6 @@ You can install `napari-griottes` via [pip]:
 To install latest development version :
 
     pip install git+https://github.com/BaroudLab/napari-griottes.git
-
-
-
-https://user-images.githubusercontent.com/11408456/167825541-29f48bd3-ed71-4553-8079-e70733d5ae48.mp4
 
 
 
