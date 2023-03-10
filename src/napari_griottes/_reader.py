@@ -185,12 +185,15 @@ def reader_numpy(path):
     # handle both a string and a list of strings
     paths = [path] if isinstance(path, str) else path
     # load all files into array
+
     arrays = [np.load(_path, allow_pickle=True).item()["masks"] for _path in paths]
+
     # stack arrays into single array
     data = np.squeeze(np.stack(arrays))
 
     # optional kwargs for the corresponding viewer.add_* method
-    add_kwargs = {}
+    add_kwargs = {"source": paths}
 
     layer_type = "labels"  # optional, default is "image"
+
     return [(data, add_kwargs, layer_type)]
