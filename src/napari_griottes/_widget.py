@@ -25,7 +25,7 @@ FUNCS = {
     "Contact_graph": griottes.generate_contact_graph,
     "Geometric graph": griottes.generate_geometric_graph,
 }
-CNAME = "Connections"
+CNAME = "Graph"
 POINT_PARAMS = {"size":10,  "opacity": .8, "name": "Centers"}
 
 @magic_factory()
@@ -68,6 +68,7 @@ def make_graph(
     weights = thickness
     logger.info(f"{len(data)} nodes")
     logger.info(f"{graph}")
+    kwargs = {}
     if "z" in data.columns:
         try:
             logger.info("Graph in 3D")
@@ -81,22 +82,14 @@ def make_graph(
             lines = np.array(
                 [[pos[i] for i in ids] for ids in list(G.edges)], dtype="int"
             )
-            vectors = [np.vstack([v[0],np.diff(v, axis=0)]) for v in lines]
+            vectors = lines2vectors(lines)
+            data = vectors
+            dtype = 'vectors'
             logger.info(
                 f"{len(lines)} edges for {len(pos)}  positions computed, rendering..."
             )
-            return [
-                (
-                    vectors,
-                    {
-                        "name": CNAME,
-                        "metadata": {"graph": G},
-                    },
-                    "vectors",
-                )
-            ]
-        except ValueError:
-            logger.error("ValueError")
+        except ValueError as e:
+            logger.error(f"ValueError: {e}")
     else:
         try:
             logger.info("Graph in 2D")
@@ -111,37 +104,52 @@ def make_graph(
             # yx = {k:(v[1], v[0]) for k,v in pos.items()}
             lines = [[pos[i] for i in ids] for ids in list(G.edges)]
 
-            vectors = [np.vstack([v[0],np.diff(v, axis=0)]) for v in lines]
+            vectors = lines2vectors(lines)
             logger.info(
                 f"{len(lines)} edges for {len(pos)}  positions computed, rendering...")
+            data = vectors
+            dtype = 'vectors'
         except TypeError:
             logger.info("contact graph")
-            G = FUNCS[graph](
-                label_layer.data,
-            )
-            pos = nx.get_node_attributes(G, "pos")
-            lines = [[pos[i] for i in ids] for ids in list(G.edges)]
+            try:
+                G = FUNCS[graph](
+                    label_layer.data,
+                )
+                pos = nx.get_node_attributes(G, "pos")
+                lines = [[pos[i] for i in ids] for ids in list(G.edges)]
+            except Exception as e:
+                logger.error(f"Contact graph failed: {e}")
+                data = []
+                dtype = "vectors"
             try:
                 weights = [
                     0.2 * thickness * e[2]["weight"]
                     for e in G.edges(data=True)
                 ]
             except IndexError:
-                logger.info(
+                logger.warning(
                     "weights failed!",
                 )
-
+                weights = 0.2 * thickness
+            data = lines
+            dtype = 'shapes'
+            kwargs = {"shape_type": "line", "name": "Contact graph"}
+    logger.debug(f"data: {data}")
     return [
         (
-            vectors,
+            data,
             {
                 "name": CNAME,
                 "edge_width": weights,
                 "metadata": {"graph": G},
+                **kwargs
             },
-            "vectors",
+            dtype,
         )
     ]
+
+def lines2vectors(lines):
+    return [np.vstack([v[0],np.diff(v, axis=0)]) for v in lines]
 
 def save_and_return_layer(vectors, graph, weights=None, path=None):
     if path:
