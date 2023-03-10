@@ -1,36 +1,79 @@
 import numpy as np
 
-from napari_griottes import ExampleQWidget, example_magic_widget
+from napari_griottes._widget import make_graph, save_graph, POINT_PARAMS, FUNCS
+
+import os
 
 
-# make_napari_viewer is a pytest fixture that returns a napari viewer object
-# capsys is a pytest fixture that captures stdout and stderr output streams
-def test_example_q_widget(make_napari_viewer, capsys):
-    # make viewer and add an image layer using our fixture
+def test_delaunay_graph(make_napari_viewer, capsys):
     viewer = make_napari_viewer()
-    viewer.add_image(np.random.random((100, 100)))
-
-    # create our widget, passing in the viewer
-    my_widget = ExampleQWidget(viewer)
-
-    # call our widget method
-    my_widget._on_click()
-
-    # read captured output and check that it's as we expected
-    captured = capsys.readouterr()
-    assert captured.out == "napari has 1 layers\n"
-
-
-def test_example_magic_widget(make_napari_viewer, capsys):
-    viewer = make_napari_viewer()
-    layer = viewer.add_image(np.random.random((100, 100)))
-
+    viewer.open_sample("napari-griottes", "zebra")
+    nlayers = len(viewer.layers)
     # this time, our widget will be a MagicFactory or FunctionGui instance
-    my_widget = example_magic_widget()
+    my_widget = make_graph()
 
     # if we "call" this object, it'll execute our function
-    my_widget(viewer.layers[0])
+    my_widget(viewer.layers["labels"])
 
-    # read captured output and check that it's as we expected
-    captured = capsys.readouterr()
-    assert captured.out == f"you have selected {layer}\n"
+    assert len(viewer.layers) == nlayers + 1
+
+    my_widget(viewer.layers["labels"], viewer.layers[POINT_PARAMS["name"]], "Delaunay")
+
+    assert len(viewer.layers) == nlayers + 2
+    
+    saver = save_graph()
+    savepath = os.path.join(os.path.curdir, "test.tif")
+    
+    saver(viewer.layers[-1], path=savepath)
+
+    assert os.path.exists(savepath+".griottes")
+    os.remove(savepath+".griottes")
+
+
+def test_contact_graph(make_napari_viewer, capsys):
+    viewer = make_napari_viewer()
+    viewer.open_sample("napari-griottes", "zebra")
+    nlayers = len(viewer.layers)
+    # this time, our widget will be a MagicFactory or FunctionGui instance
+    my_widget = make_graph()
+
+    # if we "call" this object, it'll execute our function
+    my_widget(viewer.layers["labels"])
+
+    assert len(viewer.layers) == nlayers + 1
+
+    my_widget(viewer.layers["labels"], viewer.layers[POINT_PARAMS["name"]], "Contact_graph")
+
+    assert len(viewer.layers) == nlayers + 2
+    
+    saver = save_graph()
+    savepath = os.path.join(os.path.curdir, "test.tif")
+    
+    saver(viewer.layers[-1], path=savepath)
+
+    assert os.path.exists(savepath+".griottes")
+    os.remove(savepath+".griottes")
+
+def test_geometric_graph(make_napari_viewer, capsys):
+    viewer = make_napari_viewer()
+    viewer.open_sample("napari-griottes", "zebra")
+    nlayers = len(viewer.layers)
+    # this time, our widget will be a MagicFactory or FunctionGui instance
+    my_widget = make_graph()
+
+    # if we "call" this object, it'll execute our function
+    my_widget(viewer.layers["labels"])
+
+    assert len(viewer.layers) == nlayers + 1
+
+    my_widget(viewer.layers["labels"], viewer.layers[POINT_PARAMS["name"]], "Geometric graph")
+
+    assert len(viewer.layers) == nlayers + 2
+    
+    saver = save_graph()
+    savepath = os.path.join(os.path.curdir, "test.tif")
+    
+    saver(viewer.layers[-1], path=savepath)
+
+    assert os.path.exists(savepath+".griottes")
+    os.remove(savepath+".griottes")

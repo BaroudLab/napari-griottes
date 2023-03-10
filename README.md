@@ -1,41 +1,42 @@
 # napari-griottes
 
-<!-- [![License](https://img.shields.io/pypi/l/napari-griottes.svg?color=green)](https://github.com/BaroudLab/napari-griottes/raw/main/LICENSE) -->
-<!-- [![PyPI](https://img.shields.io/pypi/v/napari-griottes.svg?color=green)](https://pypi.org/project/napari-griottes) -->
-<!-- [![Python Version](https://img.shields.io/pypi/pyversions/napari-griottes.svg?color=green)](https://python.org) -->
+[![License](https://img.shields.io/pypi/l/napari-griottes.svg?color=green)](https://github.com/BaroudLab/napari-griottes/raw/main/LICENSE)
+[![PyPI](https://img.shields.io/pypi/v/napari-griottes.svg?color=green)](https://pypi.org/project/napari-griottes)
+[![Python Version](https://img.shields.io/pypi/pyversions/napari-griottes.svg?color=green)](https://python.org)
 [![tests](https://github.com/BaroudLab/napari-griottes/workflows/tests/badge.svg)](https://github.com/BaroudLab/napari-griottes/actions)
 [![codecov](https://codecov.io/gh/BaroudLab/napari-griottes/branch/main/graph/badge.svg)](https://codecov.io/gh/BaroudLab/napari-griottes)
 
-<!-- [![napari hub](https://img.shields.io/endpoint?url=https://api.napari-hub.org/shields/napari-griottes)](https://napari-hub.org/plugins/napari-griottes) -->
+[![napari hub](https://img.shields.io/endpoint?url=https://api.napari-hub.org/shields/napari-griottes)](https://napari-hub.org/plugins/napari-griottes)
+
+
+
 Use [🍒  `Griottes` 🍒](https://github.com/BaroudLab/Griottes) in napari!
 
 ----------------------------------
 
-This [napari] plugin was generated with [Cookiecutter] using [@napari]'s [cookiecutter-napari-plugin] template.
 
-<!--
-Don't miss the full getting started guide to set up your new package:
-https://github.com/napari/cookiecutter-napari-plugin#getting-started
 
-and review the napari docs for plugin developers:
-https://napari.org/plugins/stable/index.html
--->
+https://user-images.githubusercontent.com/11408456/224119160-c381091d-8275-449e-9cf4-679ab474acd2.mp4
+
+
+
 
 ## Installation
 
+Install from napari
+
+![image](https://user-images.githubusercontent.com/11408456/224108834-f484ba37-50f4-415e-bdfb-509c6c5b88c4.png)
+
+
 You can install `napari-griottes` via [pip]:
 
-    Not available yet
+    pip install napari-griottes
 
 
 
 To install latest development version :
 
     pip install git+https://github.com/BaroudLab/napari-griottes.git
-
-
-
-https://user-images.githubusercontent.com/11408456/167825541-29f48bd3-ed71-4553-8079-e70733d5ae48.mp4
 
 
 

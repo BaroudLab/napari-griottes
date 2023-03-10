@@ -9,23 +9,36 @@ Replace code below according to your needs.
 import griottes
 import napari
 import networkx as nx
-import numpy
 import numpy as np
 import pandas as pd
 from magicgui import magic_factory
 from qtpy.QtWidgets import QHBoxLayout, QPushButton, QWidget
+import logging
+import pickle
+import os
+
+logger = logging.getLogger("griottes.widget")
+logger.setLevel(logging.INFO)
 
 FUNCS = {
-    "Geometric graph": griottes.generate_geometric_graph,
     "Delaunay": griottes.generate_delaunay_graph,
     "Contact_graph": griottes.generate_contact_graph,
+    "Geometric graph": griottes.generate_geometric_graph,
 }
-CNAME = "Connections"
-viewer = napari.current_viewer()
+CNAME = "Graph"
+POINT_PARAMS = {"size":10,  "opacity": .8, "name": "Centers"}
 
+@magic_factory()
+def save_graph(
+    graph_layer: "napari.layers.Vectors",
+    path: str
+):
+    graph = graph_layer.metadata["graph"]
+    return _save_graph(graph=graph, path=path)
+    
 
 @magic_factory(
-    auto_call=False,
+    auto_call=True,
     graph={
         "widget_type": "ComboBox",
         "choices": FUNCS.keys(),
@@ -44,50 +57,21 @@ def make_graph(
     thickness: "int" = 1,
 ) -> napari.types.LayerDataTuple:
 
-    # print(f"you have selected {img_layer}, {img_layer.data.shape}")
+    # logger.info(f"you have selected {img_layer}, {img_layer.data.shape}")
+    datapath = label_layer.source.path
+    savepath = None if datapath is None else datapath + ".graph.griottes"
+
     if point_layer is None:
-        print("No points, generating")
-        raw_centers = (
-            griottes.analyse.cell_property_extraction.get_nuclei_properties(
-                label_layer.data, mask_channel=None
-            )
-        )
-        try:
-            centers = raw_centers.rename(
-                columns={
-                    "centroid-0": "z",
-                    "centroid-1": "y",
-                    "centroid-2": "x",
-                }
-            )
-            return [
-                (
-                    centers[["z", "y", "x"]],
-                    {"name": "Centers", "properties": centers},
-                    "points",
-                ),
-            ]
-        except KeyError:
-            # print("centers 2D")
-            centers = raw_centers.rename(
-                columns={
-                    "centroid-0": "y",
-                    "centroid-1": "x",
-                }
-            )
-            return [
-                (
-                    centers[["y", "x"]],
-                    {"name": "Centers", "properties": centers},
-                    "points",
-                ),
-            ]
+        return make_point_layer(label_layer=label_layer)
     data = pd.DataFrame(point_layer.properties)
     repr(data.head())
     weights = thickness
+    logger.info(f"{len(data)} nodes")
+    logger.info(f"{graph}")
+    kwargs = {}
     if "z" in data.columns:
         try:
-            print("Graph in 3D")
+            logger.info("Graph in 3D")
             weights = thickness * 0.2
             G = FUNCS[graph](
                 data[["z", "y", "x", "label"]],
@@ -98,30 +82,17 @@ def make_graph(
             lines = np.array(
                 [[pos[i] for i in ids] for ids in list(G.edges)], dtype="int"
             )
-            print(
-                f"{len(lines)} lines for {len(pos)}  positions computed, rendering..."
+            vectors = lines2vectors(lines)
+            data = vectors
+            dtype = 'vectors'
+            logger.info(
+                f"{len(lines)} edges for {len(pos)}  positions computed, rendering..."
             )
-            # print(lines)
-            try:
-                viewer.layers.remove(CNAME)
-            except ValueError:
-                pass
-            return [
-                (
-                    lines,
-                    {
-                        "shape_type": "line",
-                        "name": CNAME,
-                        "metadata": {"graph": G},
-                    },
-                    "shapes",
-                )
-            ]
-        except ValueError:
-            print("ValueError")
+        except ValueError as e:
+            logger.error(f"ValueError: {e}")
     else:
         try:
-            print("Graph in 2D,")
+            logger.info("Graph in 2D")
 
             G = FUNCS[graph](
                 data[["x", "y", "label"]],
@@ -132,56 +103,117 @@ def make_graph(
             pos = nx.get_node_attributes(G, "pos")
             # yx = {k:(v[1], v[0]) for k,v in pos.items()}
             lines = [[pos[i] for i in ids] for ids in list(G.edges)]
+
+            vectors = lines2vectors(lines)
+            logger.info(
+                f"{len(lines)} edges for {len(pos)}  positions computed, rendering...")
+            data = vectors
+            dtype = 'vectors'
         except TypeError:
-            print("contact graph")
-            G = FUNCS[graph](
-                label_layer.data,
-            )
-            pos = nx.get_node_attributes(G, "pos")
-            lines = [[pos[i] for i in ids] for ids in list(G.edges)]
+            logger.info("contact graph")
+            try:
+                G = FUNCS[graph](
+                    label_layer.data,
+                )
+                pos = nx.get_node_attributes(G, "pos")
+                lines = [[pos[i] for i in ids] for ids in list(G.edges)]
+            except Exception as e:
+                logger.error(f"Contact graph failed: {e}")
+                data = []
+                dtype = "vectors"
             try:
                 weights = [
                     0.2 * thickness * e[2]["weight"]
                     for e in G.edges(data=True)
                 ]
             except IndexError:
-                print(
+                logger.warning(
                     "weights failed!",
                 )
-
+                weights = 0.2 * thickness
+            data = lines
+            dtype = 'shapes'
+            kwargs = {"shape_type": "line", "name": "Contact graph"}
+    logger.debug(f"data: {data}")
     return [
         (
-            lines,
+            data,
             {
-                "shape_type": "line",
                 "name": CNAME,
                 "edge_width": weights,
                 "metadata": {"graph": G},
+                **kwargs
             },
-            "shapes",
+            dtype,
+        )
+    ]
+
+def lines2vectors(lines):
+    return [np.vstack([v[0],np.diff(v, axis=0)]) for v in lines]
+
+def save_and_return_layer(vectors, graph, weights=None, path=None):
+    if path:
+        _save_graph(graph=graph, path=path)
+    return [
+        (
+            vectors,
+            {
+                "name": CNAME,
+                "edge_width": weights if weights is not None else 1,
+                "metadata": {"graph": graph},
+            },
+            "vectors",
         )
     ]
 
 
-class ExampleQWidget(QWidget):
-    # your QWidget.__init__ can optionally request the napari viewer instance
-    # in one of two ways:
-    # 1. use a parameter called `napari_viewer`, as done here
-    # 2. use a type annotation of 'napari.viewer.Viewer' for any parameter
-    def __init__(self, napari_viewer):
-        super().__init__()
-        self.viewer = napari_viewer
+def _save_graph(graph, path):
+    try:
+        savepath = path if path.endswith(".griottes") else path + ".griottes"
+        assert not os.path.exists(savepath), f"File exists: {savepath}"
+        with open(savepath, 'wb') as f:
+            pickle.dump(graph, f)
+        print(f"Saved graph to {savepath}")
+        return [savepath]
+    except Exception as e:
+        print(f"Unable to save the graph to {savepath}: {e}")
 
-        btn = QPushButton("Click me!")
-        btn.clicked.connect(self._on_click)
+        return None
 
-        self.setLayout(QHBoxLayout())
-        self.layout().addWidget(btn)
-
-    def _on_click(self):
-        print("napari has", len(self.viewer.layers), "layers")
-
-
-@magic_factory
-def example_magic_widget(img_layer: "napari.layers.Image"):
-    print(f"you have selected {img_layer}")
+def make_point_layer(label_layer):
+    logger.info("No points, generating")
+    raw_centers = (
+        griottes.analyse.cell_property_extraction.get_nuclei_properties(
+            label_layer.data, mask_channel=None
+        )
+    )
+    try:
+        centers = raw_centers.rename(
+            columns={
+                "centroid-0": "z",
+                "centroid-1": "y",
+                "centroid-2": "x",
+            }
+        )
+        return [
+            (
+                centers[["z", "y", "x"]],
+                {"properties": centers, **POINT_PARAMS},
+                "points",
+            ),
+        ]
+    except KeyError:
+        # logger.info("centers 2D")
+        centers = raw_centers.rename(
+            columns={
+                "centroid-0": "y",
+                "centroid-1": "x",
+            }
+        )
+        return [
+            (
+                centers[["y", "x"]],
+                {"properties": centers, **POINT_PARAMS},
+                "points",
+            ),
+        ]
