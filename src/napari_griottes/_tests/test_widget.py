@@ -51,7 +51,11 @@ def test_contact_graph(make_napari_viewer, capsys):
     
     saver(viewer.layers[-1], path=savepath)
 
-    assert os.path.exists(savepath+".griottes")
+    assert os.path.exists(ppp:=savepath+".griottes")
+
+    layers = viewer.open(ppp, plugin="napari-griottes")
+    assert len(layers) == 2
+
     os.remove(savepath+".griottes")
 
 def test_geometric_graph(make_napari_viewer, capsys):

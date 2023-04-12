@@ -57,6 +57,10 @@ def read_tif(path="", **kwargs):
     print(f"Opening {path}")
     data = imread(path)
     print(f"input shape: {data.shape}")
+    if data.ndim < 3:
+        channel_axis = None
+    else:
+        channel_axis = 0
     if data.shape[-1] < 10:
         dims = list(range(data.ndim))
         last_dim = dims.pop()
@@ -64,7 +68,7 @@ def read_tif(path="", **kwargs):
         data = data.transpose(*dims)
         print(f"transpose -> {data.shape}")
 
-    return [(data, {"channel_axis": 0, **kwargs}, "image")]
+    return [(data, {"channel_axis": channel_axis, **kwargs}, "image")]
 
 
 def read_csv(path, **kwargs):

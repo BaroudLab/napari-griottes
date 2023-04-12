@@ -12,7 +12,6 @@ import networkx as nx
 import numpy as np
 import pandas as pd
 from magicgui import magic_factory
-from qtpy.QtWidgets import QHBoxLayout, QPushButton, QWidget
 import logging
 import pickle
 import os
