@@ -7,7 +7,7 @@ contributions:
       title: Open data with Griottes
 
     - id: napari-griottes.save_graph
-      python_name: napari_griottes._writer:save_graph
+      python_name: napari_griottes._writer:save_graph_to_json
       title: Save graph with Griottes
 
     - id: napari-griottes.save_graph_widget
@@ -30,12 +30,12 @@ contributions:
   readers:
     - command: napari-griottes.get_reader
       accepts_directories: false
-      filename_patterns: ['*.npy', '*.tif', '*.tiff', '*.csv','*.griottes']
+      filename_patterns: ['*.json', '*.npy', '*.tif', '*.tiff', '*.csv','*.griottes']
 
   writers:
     - command: napari-griottes.save_graph
       layer_types: ['shapes', 'vectors']
-      filename_extensions: ['.griottes']
+      filename_extensions: ['.json']
 
 
   sample_data:

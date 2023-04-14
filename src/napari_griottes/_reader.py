@@ -13,6 +13,7 @@ from tifffile import imread
 
 from ._widget import CNAME, POINT_PARAMS
 import logging 
+import json
 
 
 
@@ -42,9 +43,9 @@ def napari_get_reader(path):
 
     if path.endswith(".csv"):
         return read_csv
-
-    if path.endswith(".griottes"):
-        return read_griottes
+    
+    if path.endswith(".json"):
+        return load_graph_from_json
 
     # otherwise we return the *function* that can read ``path``.
     if path.endswith(".npy"):
@@ -111,11 +112,27 @@ def colorized_points(data, **kwargs):
         )
     ]
 
-def read_griottes(
-    path,
-):
 
-    G = nx.read_gpickle(path)
+def load_graph_from_json(filename):
+    with open(filename, 'r') as file:
+        data = json.load(file)
+
+    graph = nx.Graph()
+
+    for node_data in data['nodes']:
+        node_id, props = node_data
+        graph.add_node(node_id, **props)
+
+    for edge_data in data['edges']:
+        source, target, props = edge_data
+        graph.add_edge(source, target, **props)
+
+    return read_graph(graph)
+
+
+def read_graph(
+    G,
+):
     pos = nx.get_node_attributes(G, "pos")
 
     try:

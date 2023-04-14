@@ -26,8 +26,8 @@ def test_delaunay_graph(make_napari_viewer, capsys):
     
     saver(viewer.layers[-1], path=savepath)
 
-    assert os.path.exists(savepath+".griottes")
-    os.remove(savepath+".griottes")
+    assert os.path.exists(savepath+".json")
+    os.remove(savepath+".json")
 
 
 def test_contact_graph(make_napari_viewer, capsys):
@@ -51,12 +51,12 @@ def test_contact_graph(make_napari_viewer, capsys):
     
     saver(viewer.layers[-1], path=savepath)
 
-    assert os.path.exists(ppp:=savepath+".griottes")
+    assert os.path.exists(ppp:=savepath+".json")
 
     layers = viewer.open(ppp, plugin="napari-griottes")
     assert len(layers) == 2
 
-    os.remove(savepath+".griottes")
+    os.remove(savepath+".json")
 
 def test_geometric_graph(make_napari_viewer, capsys):
     viewer = make_napari_viewer()
@@ -79,5 +79,5 @@ def test_geometric_graph(make_napari_viewer, capsys):
     
     saver(viewer.layers[-1], path=savepath)
 
-    assert os.path.exists(savepath+".griottes")
-    os.remove(savepath+".griottes")
+    assert os.path.exists(savepath+".json")
+    os.remove(savepath+".json")
