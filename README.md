@@ -79,7 +79,7 @@ https://user-images.githubusercontent.com/11408456/168237170-b43afd5a-26a4-4cdc-
 
 ### Saving and recovering the graph
 
-Any graph you see in napari can be saved in .griottes format which is networkx.gpickle inside.
+Any graph you see in napari can be saved in .json format.
 1. Select he layers with connections
 2. Click File/Save Selected Layer
 3. Choose Griottes in drop-down menu
@@ -91,8 +91,6 @@ In order to recover a previously saved graph in napari, you can simply drag-n-dr
 
 https://user-images.githubusercontent.com/11408456/167845853-e7071199-3f58-4d11-8d7b-c1358a150e6b.mp4
 
-
-Otherwise, you can open the graph with [neworkx.read_gpickle](https://networkx.org/documentation/stable/reference/readwrite/generated/networkx.readwrite.gpickle.read_gpickle.html) function
 
 ## Contributing
 
