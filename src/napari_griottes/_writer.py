@@ -36,12 +36,12 @@ def save_graph_to_json(graph, filename):
 def _ser(o):
     """convert types for json.dumps to work"""
     try:
-        if isinstance(o, (int,np.int32, np.intc)):
+        if isinstance(o, (int, np.int32, np.uint16, np.intc, np.int64)):
             return int(o)
         elif isinstance(o, (float, str)):
             return o
         else:
-            return list(0)
+            return list(o)
     except TypeError as e:
         print(o, type(o))
         raise e

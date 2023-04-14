@@ -20,11 +20,17 @@ GRIOTTES_DATA = [
 
 
 def make_zebrafish_data():
-    return _load_griottes_sample_data(
-        *GRIOTTES_DATA[0],
-        name=["ch 1", "ch 2", "ch 3", "ch 4", "labels"],
-        colormap=["cyan", "yellow", "magenta", "red", "viridis"],
-    )
+    data = _load_griottes_sample_data(*GRIOTTES_DATA[0])[0][0]
+    return[
+        (
+            d, {"name": name}, layer_type) \
+            for d, name, layer_type in \
+            zip(
+                data, 
+                ["ch 1", "ch 2", "ch 3", "ch 4", "labels"],
+                ["image", "image", "image", "image", "labels" ]
+            )
+    ]
 
 
 def make_cell_properties():
@@ -40,7 +46,7 @@ def download_url_to_file(
 
     import urllib3
 
-    print(f"Donloading {url}")
+    print(f"Downloading {url}")
     c = urllib3.PoolManager()
     with c.request("GET", url, preload_content=False) as resp, open(
         file_path, "wb"

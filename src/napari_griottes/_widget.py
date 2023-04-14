@@ -13,8 +13,8 @@ import numpy as np
 import pandas as pd
 from magicgui import magic_factory
 import logging
-import pickle
 import os
+
 from ._writer import save_graph_to_json
 
 logger = logging.getLogger("griottes.widget")
@@ -30,7 +30,7 @@ POINT_PARAMS = {"size":10,  "opacity": .8, "name": "Centers"}
 
 @magic_factory()
 def save_graph(
-    graph_layer: "napari.layers.Vectors",
+    graph_layer: "napari.layers.Layer",
     path: str
 ):
     graph = graph_layer.metadata["graph"]
@@ -109,16 +109,17 @@ def make_graph(
                 f"{len(lines)} edges for {len(pos)}  positions computed, rendering...")
             data = vectors
             dtype = 'vectors'
-        except (TypeError, UnboundLocalError):
+        except (TypeError, UnboundLocalError, AssertionError):
             logger.info("contact graph")
             try:
                 G = FUNCS[graph](
-                    labels_array=label_layer.data,
+                    label_layer.data,
                 )
                 pos = nx.get_node_attributes(G, "pos")
                 lines = [[pos[i] for i in ids] for ids in list(G.edges)]
             except Exception as e:
                 logger.error(f"Contact graph failed: {e}")
+                raise e
                 data = []
                 dtype = "vectors"
             try:
