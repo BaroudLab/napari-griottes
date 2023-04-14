@@ -11,27 +11,50 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any, Sequence, Tuple, Union
 
 import networkx as nx
+import json
 
 if TYPE_CHECKING:
     DataType = Union[Any, Sequence[Any]]
     FullLayerData = Tuple[DataType, dict, str]
 
+import numpy as np
+
+def numpy_to_python(value):
+    if isinstance(value, np.generic):
+        return value.tolist()
+    return value
+
+def save_graph_to_json(graph, filename):
+    
+    with open(filename, 'w') as file:
+        json.dump({
+            "nodes": list(graph.nodes.data()),
+            "edges": list(graph.edges.data())
+        }, file, default=_ser)
+    return [filename]
+
+def _ser(o):
+    """convert types for json.dumps to work"""
+    try:
+        if isinstance(o, (int,np.int32, np.intc)):
+            return int(o)
+        elif isinstance(o, (float, str)):
+            return o
+        else:
+            return list(0)
+    except TypeError as e:
+        print(o, type(o))
+        raise e
 
 def save_graph(path: str, data: FullLayerData, props: dict, **kwargs):
     """Writes a single layer graph"""
     try:
-        nx.write_gpickle(
-            props["metadata"]["graph"],
-            (
-                ppp := (
-                    path if path.endswith(".griottes") else path + ".griottes"
-                )
-            ),
-        )
-        print(f"Saved graph to {ppp}")
+        ppp = path if path.endswith(".json") else path + ".json"
+        out = save_graph_to_json(data.metadata["graph"], ppp)
+        print(f"Saved graph to {out}")
     except KeyError:
         print("Grapth not found, choose another layer")
-    return [ppp]
+    return [out]
 
 
 # (

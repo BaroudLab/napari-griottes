@@ -15,6 +15,7 @@ from magicgui import magic_factory
 import logging
 import pickle
 import os
+from ._writer import save_graph_to_json
 
 logger = logging.getLogger("griottes.widget")
 logger.setLevel(logging.INFO)
@@ -37,7 +38,7 @@ def save_graph(
     
 
 @magic_factory(
-    auto_call=True,
+    auto_call=False,
     graph={
         "widget_type": "ComboBox",
         "choices": FUNCS.keys(),
@@ -58,7 +59,7 @@ def make_graph(
 
     # logger.info(f"you have selected {img_layer}, {img_layer.data.shape}")
     datapath = label_layer.source.path
-    savepath = None if datapath is None else datapath + ".graph.griottes"
+    savepath = None if datapath is None else datapath + ".json"
 
     if point_layer is None:
         return make_point_layer(label_layer=label_layer)
@@ -108,11 +109,11 @@ def make_graph(
                 f"{len(lines)} edges for {len(pos)}  positions computed, rendering...")
             data = vectors
             dtype = 'vectors'
-        except TypeError:
+        except (TypeError, UnboundLocalError):
             logger.info("contact graph")
             try:
                 G = FUNCS[graph](
-                    label_layer.data,
+                    labels_array=label_layer.data,
                 )
                 pos = nx.get_node_attributes(G, "pos")
                 lines = [[pos[i] for i in ids] for ids in list(G.edges)]
@@ -125,7 +126,7 @@ def make_graph(
                     0.2 * thickness * e[2]["weight"]
                     for e in G.edges(data=True)
                 ]
-            except IndexError:
+            except (IndexError, UnboundLocalError):
                 logger.warning(
                     "weights failed!",
                 )
@@ -168,10 +169,9 @@ def save_and_return_layer(vectors, graph, weights=None, path=None):
 
 def _save_graph(graph, path):
     try:
-        savepath = path if path.endswith(".griottes") else path + ".griottes"
+        savepath = path if path.endswith(".json") else path + ".json"
         assert not os.path.exists(savepath), f"File exists: {savepath}"
-        with open(savepath, 'wb') as f:
-            pickle.dump(graph, f)
+        save_graph_to_json(graph, savepath)
         print(f"Saved graph to {savepath}")
         return [savepath]
     except Exception as e:
